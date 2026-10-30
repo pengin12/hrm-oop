@@ -1,12 +1,12 @@
 import java.time.LocalDate;
 
-enum EmployeeStatus {
-  WORKING,
-  ON_LEAVE,
-  RESIGNED
-}
-
 public class Employee extends Person {
+  public enum EmployeeStatus {
+    WORKING,
+    ON_LEAVE,
+    RESIGNED
+  }
+
   private String id;
   private LocalDate hireDate;
   private String specialization;
