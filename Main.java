@@ -39,6 +39,8 @@ public class Main {
   }
 
   private static Account createAccount(Scanner sc) {
+    System.out.print("\033[H\033[2J");
+    System.out.println("Create Account");
     System.out.print("Username: ");
     String username = sc.nextLine();
 
@@ -588,6 +590,8 @@ public class Main {
   }
 
   private static Employee createEmployee(Scanner sc) {
+    System.out.print("\033[H\033[2J");
+    System.out.println("Create Employee");
     System.out.print("First name: ");
     String firstName = sc.nextLine();
 
@@ -640,6 +644,8 @@ public class Main {
   }
 
   private static Department createDepartment(Scanner sc) {
+    System.out.print("\033[H\033[2J");
+    System.out.println("Create Department");
     System.out.print("Name: ");
     String name = sc.nextLine();
 
@@ -653,6 +659,8 @@ public class Main {
   }
 
   private static Position createPosition(Scanner sc) {
+    System.out.print("\033[H\033[2J");
+    System.out.println("Create Position");
     System.out.print("Name: ");
     String name = sc.nextLine();
 
@@ -701,7 +709,7 @@ public class Main {
     return inputNonNegative(sc, "How many");
   }
 
-  private static void createFirstN(Scanner sc) {
+  private static void createNElements(Scanner sc) {
     CreatingType type = choiceType(sc);
     if (type == null) {
       return;
@@ -713,6 +721,7 @@ public class Main {
       switch (type) {
         case ACCOUNT:
           if (accountsOccupied + 1 >= accounts.length) {
+            System.out.print("\033[H\033[2J");
             System.out.println("Account storage is full");
             break;
           }
@@ -722,6 +731,7 @@ public class Main {
           break;
         case EMPLOYEE:
           if (employeesOccupied + 1 >= employees.length) {
+            System.out.print("\033[H\033[2J");
             System.out.println("Employee storage is full");
             break;
           }
@@ -731,6 +741,7 @@ public class Main {
           break;
         case DEPARTMENT:
           if (departmentsOccupied + 1 >= departments.length) {
+            System.out.print("\033[H\033[2J");
             System.out.println("Department storage is full");
             break;
           }
@@ -740,6 +751,7 @@ public class Main {
           break;
         case POSITION:
           if (positionsOccupied + 1 >= positions.length) {
+            System.out.print("\033[H\033[2J");
             System.out.println("Position storage is full");
             break;
           }
@@ -1059,6 +1071,7 @@ public class Main {
     maxPayrolls = inputNonNegative(sc, "Max payrolls");
     maxAttendances = inputNonNegative(sc, "Max attendances");
     maxInsurances = inputNonNegative(sc, "Max insurances");
+    maxResignations = inputNonNegative(sc, "Max resignations");
 
     System.out.print("\033[H\033[2J");
 
@@ -1524,7 +1537,7 @@ public class Main {
     int choice;
     do {
       System.out.println("[0] Exit");
-      System.out.println("[1] Create first N");
+      System.out.println("[1] Create N elements");
       System.out.println("[2] Login");
       System.out.println("[3] Create sample data");
       System.out.print("Choice: ");
@@ -1536,7 +1549,7 @@ public class Main {
         case 0:
           return;
         case 1:
-          createFirstN(sc);
+          createNElements(sc);
           break;
         case 2:
           String username;
