@@ -16,7 +16,7 @@ public class Employee extends Person {
   private Payroll[] payrolls;
   private Attendance[] attendances;
   private Absence[] absences;
-  private Resignation resignation;
+  private Resignation[] resignations;
   private Insurance[] insurances;
   private String taxId;
   private Position position;
@@ -25,7 +25,7 @@ public class Employee extends Person {
   public Employee(String firstName, String lastName, String email, String phone, LocalDate dateOfBirth, String gender,
       Address address, String id, LocalDate hireDate, String specialization, Employee.EmployeeStatus status,
       Evaluation[] evaluations, Contract[] contracts, Payroll[] payrolls, Attendance[] attendances,
-      Resignation resignation, String taxId, Insurance[] insurances, Position position, Department department) {
+      Resignation[] resignations, String taxId, Insurance[] insurances, Position position, Department department) {
     super(firstName, lastName, email, phone, dateOfBirth, gender, address);
     this.id = id;
     this.hireDate = hireDate;
@@ -35,7 +35,7 @@ public class Employee extends Person {
     this.contracts = contracts;
     this.payrolls = payrolls;
     this.attendances = attendances;
-    this.resignation = resignation;
+    this.resignations = resignations;
     this.taxId = taxId;
     this.insurances = insurances;
     this.position = position;
@@ -114,12 +114,12 @@ public class Employee extends Person {
     this.absences = absence;
   }
 
-  public Resignation getResignation() {
-    return resignation;
+  public Resignation[] getResignations() {
+    return resignations;
   }
 
-  public void setResignation(Resignation resignation) {
-    this.resignation = resignation;
+  public void setResignations(Resignation[] resignation) {
+    this.resignations = resignation;
   }
 
   public Insurance[] getInsurances() {

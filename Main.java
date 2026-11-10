@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +16,7 @@ public class Main {
   private static int maxPayrolls;
   private static int maxAttendances;
   private static int maxInsurances;
+  private static int maxResignations;
 
   private static Account[] accounts;
   private static Employee[] employees;
@@ -443,7 +447,7 @@ public class Main {
     return attendances;
   }
 
-  private static Resignation createResignation(Scanner sc) {
+  private static Resignation[] createResignation(Scanner sc) {
     int resignationChoice;
     do {
       System.out.println("[0] No");
@@ -452,46 +456,61 @@ public class Main {
       resignationChoice = Integer.parseInt(sc.nextLine());
     } while (resignationChoice != 0 && resignationChoice != 1);
 
+    Resignation[] resignations = new Resignation[maxResignations];
+
     String reason;
     LocalDate date;
     Resignation.ResignationStatus resigntationStatus = Resignation.ResignationStatus.REJECTED;
 
     if (resignationChoice == 1) {
-      System.out.print("Reason: ");
-      reason = sc.nextLine();
+      int resignationCount;
 
-      System.out.print("Date (dd/MM/yyyy): ");
-      date = LocalDate.parse(sc.nextLine(), dateFormatter);
-
-      int statusNum;
       do {
-        System.out.println("[1] Pending");
-        System.out.println("[2] Rejected");
-        System.out.println("[3] Approved");
-        System.out.print("Status: ");
-        statusNum = Integer.parseInt(sc.nextLine());
-      } while (statusNum < 1 || 3 < statusNum);
+        System.out.print("How many resignations? ");
+        resignationCount = Integer.parseInt(sc.nextLine());
 
-      switch (statusNum) {
-        case 1:
-          resigntationStatus = Resignation.ResignationStatus.PENDING;
-          break;
-        case 2:
-          resigntationStatus = Resignation.ResignationStatus.REJECTED;
-          break;
-        case 3:
-          resigntationStatus = Resignation.ResignationStatus.APPROVED;
-          break;
+        if (resignationCount < 0 || maxResignations < resignationCount) {
+          System.out.println("Invalid resignation count");
+          System.out.printf("Min: 0, Max: %d\n", maxResignations);
+        }
+      } while (resignationCount < 0 || maxResignations < resignationCount);
 
-        default:
-          break;
+      for (int i = 0; i < resignationCount; i++) {
+        System.out.print("Reason: ");
+        reason = sc.nextLine();
+
+        System.out.print("Date (dd/MM/yyyy): ");
+        date = LocalDate.parse(sc.nextLine(), dateFormatter);
+
+        int statusNum;
+        do {
+          System.out.println("[1] Pending");
+          System.out.println("[2] Rejected");
+          System.out.println("[3] Approved");
+          System.out.print("Status: ");
+          statusNum = Integer.parseInt(sc.nextLine());
+        } while (statusNum < 1 || 3 < statusNum);
+
+        switch (statusNum) {
+          case 1:
+            resigntationStatus = Resignation.ResignationStatus.PENDING;
+            break;
+          case 2:
+            resigntationStatus = Resignation.ResignationStatus.REJECTED;
+            break;
+          case 3:
+            resigntationStatus = Resignation.ResignationStatus.APPROVED;
+            break;
+
+          default:
+            break;
+        }
+
+        resignations[i] = new Resignation(reason, date, resigntationStatus);
       }
-    } else {
-      reason = "";
-      date = LocalDate.parse("01/01/1000", dateFormatter);
     }
 
-    return new Resignation(reason, date, resigntationStatus);
+    return resignations;
   }
 
   private static Insurance[] createInsurances(Scanner sc) {
@@ -606,7 +625,7 @@ public class Main {
     Payroll[] payrolls = createPayrolls(sc);
     Attendance[] attendances = createAttendances(sc);
 
-    Resignation resignation = createResignation(sc);
+    Resignation[] resignations = createResignation(sc);
 
     System.out.print("Tax id: ");
     String taxId = sc.nextLine();
@@ -617,7 +636,7 @@ public class Main {
     Department department = chooseDepartment(sc);
 
     return new Employee(firstName, lastName, email, phone, dateOfBirth, gender, address, id, hireDate, specialization,
-        status, evaluations, contracts, payrolls, attendances, resignation, taxId, insurances, position, department);
+        status, evaluations, contracts, payrolls, attendances, resignations, taxId, insurances, position, department);
   }
 
   private static Department createDepartment(Scanner sc) {
@@ -1042,6 +1061,325 @@ public class Main {
     maxInsurances = inputNonNegative(sc, "Max insurances");
 
     System.out.print("\033[H\033[2J");
+
+    try {
+      String currentDirectory = System.getProperty("user.dir");
+      String directoryPath = currentDirectory + File.separator + "data";
+
+      File directory = new File(directoryPath);
+      if (!directory.exists()) {
+        directory.mkdir();
+      }
+
+      String accountPath = directoryPath + File.separator + "accounts.txt";
+      String employeePath = directoryPath + File.separator + "employee.txt";
+      String departmentPath = directoryPath + File.separator + "department.txt";
+      String positionPath = directoryPath + File.separator + "position.txt";
+
+      File accountFile = new File(accountPath);
+      File employeeFile = new File(employeePath);
+      File departmentFile = new File(departmentPath);
+      File positionFile = new File(positionPath);
+
+      if (!accountFile.exists()) {
+        accountFile.createNewFile();
+      }
+      if (!employeeFile.exists()) {
+        employeeFile.createNewFile();
+      }
+      if (!departmentFile.exists()) {
+        departmentFile.createNewFile();
+      }
+      if (!positionFile.exists()) {
+        positionFile.createNewFile();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static void readData() {
+
+  }
+
+  private static String writeAccountData() {
+    String data = "";
+
+    for (int i = 0; i <= accountsOccupied; i++) {
+      if (accounts[i] instanceof AdminAccount) {
+        data += "admin\n";
+      } else {
+        data += "employee\n";
+      }
+      data += accounts[i].getUsername() + "\n";
+      data += accounts[i].getPassword() + "\n";
+      data += accounts[i].getStatus() + "\n";
+      data += "\n";
+    }
+
+    return data;
+  }
+
+  private static String writeEmployeeData() {
+    String data = "";
+
+    for (int i = 0; i <= employeesOccupied; i++) {
+      Employee currentEmployee = employees[i];
+      data += currentEmployee.getFirstName() + "\n";
+      data += currentEmployee.getLastName() + "\n";
+      data += currentEmployee.getEmail() + "\n";
+      data += currentEmployee.getPhone() + "\n";
+      data += currentEmployee.getDateOfBirth() + "\n";
+      data += currentEmployee.getGender() + "\n";
+
+      data += "{\n";
+      data += currentEmployee.getAddress().getNumber() + "\n";
+      data += currentEmployee.getAddress().getStreet() + "\n";
+      data += currentEmployee.getAddress().getWard() + "\n";
+      data += currentEmployee.getAddress().getDistrict() + "\n";
+      data += currentEmployee.getAddress().getCity() + "\n";
+      data += "}\n";
+
+      data += currentEmployee.getId() + "\n";
+      data += currentEmployee.getHireDate() + "\n";
+      data += currentEmployee.getSpecialization() + "\n";
+      data += currentEmployee.getStatus() + "\n";
+
+      data += "{\n";
+      Evaluation[] evaluations = currentEmployee.getEvaluations();
+      if (evaluations == null) {
+        data += "null\n";
+      } else {
+        for (int j = 0; j < evaluations.length; j++) {
+          Evaluation currentEvaluation = evaluations[j];
+          if (currentEvaluation == null) {
+            break;
+          }
+
+          data += "{\n";
+
+          data += currentEvaluation.getMonth() + "\n";
+          data += currentEvaluation.getMonth() + "\n";
+          data += currentEvaluation.getComment() + "\n";
+          data += currentEvaluation.getWorkScore() + "\n";
+          data += currentEvaluation.getAttitudeScore() + "\n";
+          data += currentEvaluation.getDisciplineScore() + "\n";
+          data += currentEvaluation.getWorkQuality() + "\n";
+          data += currentEvaluation.getProductivity() + "\n";
+          data += currentEvaluation.getTeamWork() + "\n";
+
+          data += "}\n";
+        }
+      }
+      data += "}\n";
+
+      data += "{\n";
+      Contract[] contracts = currentEmployee.getContracts();
+      if (contracts == null) {
+        data += "null\n";
+      } else {
+        for (int j = 0; j < contracts.length; j++) {
+          Contract currentContract = contracts[j];
+          if (currentContract == null) {
+            break;
+          }
+
+          data += "{\n";
+
+          data += currentContract.getStartDate() + "\n";
+          data += currentContract.getEndDate() + "\n";
+          data += currentContract.getType() + "\n";
+          data += currentContract.getStatus() + "\n";
+
+          data += "}\n";
+        }
+      }
+      data += "}\n";
+
+      data += "{\n";
+      Payroll[] payrolls = currentEmployee.getPayrolls();
+      if (payrolls == null) {
+        data += "null\n";
+      } else {
+        for (int j = 0; j < payrolls.length; j++) {
+          Payroll currentPayroll = payrolls[j];
+          if (currentPayroll == null) {
+            break;
+          }
+
+          data += "{\n";
+
+          data += currentPayroll.getMonth() + "\n";
+          data += currentPayroll.getYear() + "\n";
+          data += currentPayroll.getBaseSalary() + "\n";
+          data += currentPayroll.getBonus() + "\n";
+          data += currentPayroll.getAllowance() + "\n";
+          data += currentPayroll.getDeduction() + "\n";
+          data += currentPayroll.getTaxAmount() + "\n";
+          data += currentPayroll.getInsuranceAmount() + "\n";
+          data += currentPayroll.getWorkedHours() + "\n";
+          data += currentPayroll.getOvertimeHours() + "\n";
+          data += currentPayroll.getLastSalaryIncreaseDate() + "\n";
+
+          data += "}\n";
+        }
+      }
+      data += "}\n";
+
+      data += "{\n";
+      Attendance[] attendances = currentEmployee.getAttendances();
+      if (attendances == null) {
+        data += "null\n";
+      } else {
+        for (int j = 0; j < attendances.length; j++) {
+          Attendance currentAttendance = attendances[j];
+          if (currentAttendance == null) {
+            break;
+          }
+
+          data += "{\n";
+
+          data += currentAttendance.getDate() + "\n";
+          data += currentAttendance.getClockIn() + "\n";
+          data += currentAttendance.getClockOut() + "\n";
+
+          data += "}\n";
+        }
+      }
+      data += "}\n";
+
+      data += "{\n";
+      Absence[] absences = currentEmployee.getAbsences();
+      if (absences == null) {
+        data += "null\n";
+      } else {
+        for (int j = 0; j < absences.length; j++) {
+          Absence currentAbsence = absences[j];
+          if (currentAbsence == null) {
+            break;
+          }
+
+          data += "{\n";
+
+          data += currentAbsence.getReason() + "\n";
+          data += currentAbsence.getFromDate() + "\n";
+          data += currentAbsence.getToDate() + "\n";
+          data += currentAbsence.getStatus() + "\n";
+
+          data += "}\n";
+        }
+      }
+      data += "}\n";
+
+      data += "{\n";
+      Resignation[] resignations = currentEmployee.getResignations();
+      if (resignations == null) {
+        data += "null\n";
+      } else {
+        for (int j = 0; j < resignations.length; j++) {
+          Resignation currentResignation = resignations[j];
+          if (currentResignation == null) {
+            break;
+          }
+
+          data += "{\n";
+
+          data += currentResignation.getReason() + "\n";
+          data += currentResignation.getDate() + "\n";
+          data += currentResignation.getStatus() + "\n";
+
+          data += "}\n";
+        }
+      }
+      data += "}\n";
+
+      data += "{\n";
+      Insurance[] insurances = currentEmployee.getInsurances();
+      if (insurances == null) {
+        data += "null\n";
+      } else {
+        for (int j = 0; j < insurances.length; j++) {
+          Insurance currentInsurance = insurances[j];
+          if (currentInsurance == null) {
+            break;
+          }
+
+          data += "{\n";
+
+          data += currentInsurance.getInsuranceNumber() + "\n";
+          data += currentInsurance.getType() + "\n";
+          data += currentInsurance.getStartDate() + "\n";
+          data += currentInsurance.getEndDate() + "\n";
+          data += currentInsurance.getRate() + "\n";
+
+          data += "}\n";
+        }
+      }
+      data += "}\n";
+
+      data += currentEmployee.getTaxId() + "\n";
+
+      data += currentEmployee.getPosition() + "\n";
+      data += currentEmployee.getDepartment() + "\n";
+      data += "\n";
+    }
+
+    return data;
+  }
+
+  private static String writeDepartmentData() {
+    String data = "";
+
+    for (int i = 0; i <= departmentsOccupied; i++) {
+      data += departments[i].getName() + "\n";
+      data += departments[i].getPhone() + "\n";
+      data += departments[i].getPosition() + "\n";
+      data += "\n";
+    }
+
+    return data;
+  }
+
+  private static String writePositionData() {
+    String data = "";
+
+    for (int i = 0; i <= positionsOccupied; i++) {
+      data += positions[i].getName() + "\n";
+      data += positions[i].getPositionCoefficient() + "\n";
+      data += positions[i].getResponsibilities() + "\n";
+      data += "\n";
+    }
+
+    return data;
+  }
+
+  private static void writeData() {
+    try {
+      String currentDirectory = System.getProperty("user.dir");
+      String directoryPath = currentDirectory + File.separator + "data";
+
+      String accountPath = directoryPath + File.separator + "accounts.txt";
+      String employeePath = directoryPath + File.separator + "employee.txt";
+      String departmentPath = directoryPath + File.separator + "department.txt";
+      String positionPath = directoryPath + File.separator + "position.txt";
+
+      FileWriter accountFileWriter = new FileWriter(accountPath);
+      FileWriter employeeFileWriter = new FileWriter(employeePath);
+      FileWriter departmentFileWriter = new FileWriter(departmentPath);
+      FileWriter positionFileWriter = new FileWriter(positionPath);
+
+      accountFileWriter.write(writeAccountData());
+      employeeFileWriter.write(writeEmployeeData());
+      departmentFileWriter.write(writeDepartmentData());
+      positionFileWriter.write(writePositionData());
+
+      accountFileWriter.close();
+      employeeFileWriter.close();
+      departmentFileWriter.close();
+      positionFileWriter.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   private static void createSampleData() {
@@ -1139,9 +1477,11 @@ public class Main {
         LocalTime.of(8, 0),
         LocalTime.of(17, 0));
 
-    Resignation resignation = new Resignation(
+    Resignation[] resignations = new Resignation[maxInsurances];
+
+    resignations[0] = new Resignation(
         "",
-        LocalDate.of(1000, 1, 1),
+        LocalDate.of(2012, 1, 13),
         Resignation.ResignationStatus.REJECTED);
 
     Insurance[] insurances = new Insurance[maxInsurances];
@@ -1169,7 +1509,7 @@ public class Main {
         contracts,
         payrolls,
         attendances,
-        resignation,
+        resignations,
         "TAX001",
         insurances,
         positions[0],
@@ -1234,7 +1574,9 @@ public class Main {
     Scanner sc = new Scanner(System.in);
 
     setup(sc);
+    readData();
     runUI(sc);
+    writeData();
 
     sc.close();
   }

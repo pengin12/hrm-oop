@@ -67,4 +67,56 @@ public class Evaluation {
         System.out.println("Diem trung binh: " + calculateEvaluationScore());
         System.out.println("He so thuong: " + getBonusRate());
     }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public double getWorkScore() {
+        return workScore;
+    }
+
+    public void setWorkScore(double workScore) {
+        this.workScore = workScore;
+    }
+
+    public double getAttitudeScore() {
+        return attitudeScore;
+    }
+
+    public void setAttitudeScore(double attitudeScore) {
+        this.attitudeScore = attitudeScore;
+    }
+
+    public double getDisciplineScore() {
+        return disciplineScore;
+    }
+
+    public void setDisciplineScore(double disciplineScore) {
+        this.disciplineScore = disciplineScore;
+    }
+
+    public void setWorkQuality(double workQuality) {
+        this.workQuality = workQuality;
+    }
+
+    public void setProductivity(double productivity) {
+        this.productivity = productivity;
+    }
+
+    public void setTeamWork(double teamWork) {
+        this.teamWork = teamWork;
+    }
 }

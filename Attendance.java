@@ -33,4 +33,28 @@ public class Attendance {
         System.out.println("Gio ra: " + clockOut.format(timeFormatter));
         System.out.println("So gio lam: " + calculateWorkedHours());
     }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public LocalTime getClockIn() {
+        return clockIn;
+    }
+
+    public void setClockIn(LocalTime clockIn) {
+        this.clockIn = clockIn;
+    }
+
+    public LocalTime getClockOut() {
+        return clockOut;
+    }
+
+    public void setClockOut(LocalTime clockOut) {
+        this.clockOut = clockOut;
+    }
 }

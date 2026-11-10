@@ -75,4 +75,84 @@ public class Payroll {
                 + (lastSalaryIncreaseDate == null ? "Chua co" : lastSalaryIncreaseDate));
         System.out.println("Luong thuc nhan: " + calculateNetSalary());
     }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public double getBaseSalary() {
+        return baseSalary;
+    }
+
+    public void setBaseSalary(double baseSalary) {
+        this.baseSalary = baseSalary;
+    }
+
+    public double getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(double bonus) {
+        this.bonus = bonus;
+    }
+
+    public double getAllowance() {
+        return allowance;
+    }
+
+    public void setAllowance(double allowance) {
+        this.allowance = allowance;
+    }
+
+    public double getDeduction() {
+        return deduction;
+    }
+
+    public void setDeduction(double deduction) {
+        this.deduction = deduction;
+    }
+
+    public double getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(double taxAmount) {
+        this.taxAmount = taxAmount;
+    }
+
+    public double getInsuranceAmount() {
+        return insuranceAmount;
+    }
+
+    public void setInsuranceAmount(double insuranceAmount) {
+        this.insuranceAmount = insuranceAmount;
+    }
+
+    public int getWorkedHours() {
+        return workedHours;
+    }
+
+    public void setWorkedHours(int workedHours) {
+        this.workedHours = workedHours;
+    }
+
+    public int getOvertimeHours() {
+        return overtimeHours;
+    }
+
+    public void setOvertimeHours(int overtimeHours) {
+        this.overtimeHours = overtimeHours;
+    }
 }
