@@ -34,7 +34,7 @@ public class DataHandler {
   private static String writeEmployeeData(Employee[] employees) {
     String data = "";
 
-    for (int i = 0; i <= employees.length; i++) {
+    for (int i = 0; i < employees.length; i++) {
       Employee currentEmployee = employees[i];
       if (currentEmployee == null) {
         continue;
@@ -245,7 +245,7 @@ public class DataHandler {
   private static String writeDepartmentData(Department[] departments) {
     String data = "";
 
-    for (int i = 0; i <= departments.length; i++) {
+    for (int i = 0; i < departments.length; i++) {
       Department currentDepartment = departments[i];
       if (currentDepartment == null) {
         continue;
@@ -263,7 +263,7 @@ public class DataHandler {
   private static String writePositionData(Position[] positions) {
     String data = "";
 
-    for (int i = 0; i <= positions.length; i++) {
+    for (int i = 0; i < positions.length; i++) {
       Position currentPosition = positions[i];
       if (currentPosition == null) {
         continue;
