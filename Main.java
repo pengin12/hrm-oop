@@ -6,16 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Main {
-  private static int maxAccounts;
-  private static int maxEmployees;
-  private static int maxDepartments;
-  private static int maxPositions;
-  private static int maxEvaluations;
-  private static int maxContracts;
-  private static int maxPayrolls;
-  private static int maxAttendances;
-  private static int maxInsurances;
-  private static int maxResignations;
+  private static LimitHandler limits = new LimitHandler();
 
   private static Account[] accounts;
   private static Employee[] employees;
@@ -303,13 +294,13 @@ public class Main {
       System.out.print("How many evaluations? ");
       evaluationCount = Integer.parseInt(sc.nextLine());
 
-      if (evaluationCount < 0 || maxEvaluations < evaluationCount) {
+      if (evaluationCount < 0 || limits.getMaxEvaluations() < evaluationCount) {
         System.out.print("Invalid evaluation count");
-        System.out.printf("Min: 0, Max: %d", maxEvaluations);
+        System.out.printf("Min: 0, Max: %d", limits.getMaxEvaluations());
       }
-    } while (evaluationCount < 0 || maxEvaluations < evaluationCount);
+    } while (evaluationCount < 0 || limits.getMaxEvaluations() < evaluationCount);
 
-    Evaluation[] evaluations = new Evaluation[maxEvaluations];
+    Evaluation[] evaluations = new Evaluation[limits.getMaxEvaluations()];
     for (int i = 0; i < evaluationCount; i++) {
       evaluations[i] = createEvaluation(sc);
     }
@@ -323,13 +314,13 @@ public class Main {
       System.out.print("How many contracts? ");
       contractCount = Integer.parseInt(sc.nextLine());
 
-      if (contractCount < 0 || maxContracts < contractCount) {
+      if (contractCount < 0 || limits.getMaxContracts() < contractCount) {
         System.out.println("Invalid contract count");
-        System.out.printf("Min: 0, Max: %d\n", maxContracts);
+        System.out.printf("Min: 0, Max: %d\n", limits.getMaxContracts());
       }
-    } while (contractCount < 0 || maxContracts < contractCount);
+    } while (contractCount < 0 || limits.getMaxContracts() < contractCount);
 
-    Contract[] contracts = new Contract[maxContracts];
+    Contract[] contracts = new Contract[limits.getMaxContracts()];
     for (int i = 0; i < contractCount; i++) {
       contracts[i] = createContract(sc);
     }
@@ -344,13 +335,13 @@ public class Main {
       System.out.print("How many payrolls? ");
       payrollCount = Integer.parseInt(sc.nextLine());
 
-      if (payrollCount < 0 || maxPayrolls < payrollCount) {
+      if (payrollCount < 0 || limits.getMaxPayrolls() < payrollCount) {
         System.out.println("Invalid payroll count");
-        System.out.printf("Min: 0, Max: %d\n", maxPayrolls);
+        System.out.printf("Min: 0, Max: %d\n", limits.getMaxPayrolls());
       }
-    } while (payrollCount < 0 || maxPayrolls < payrollCount);
+    } while (payrollCount < 0 || limits.getMaxPayrolls() < payrollCount);
 
-    Payroll[] payrolls = new Payroll[maxPayrolls];
+    Payroll[] payrolls = new Payroll[limits.getMaxPayrolls()];
     for (int i = 0; i < payrollCount; i++) {
       payrolls[i] = createPayroll(sc);
     }
@@ -365,13 +356,13 @@ public class Main {
       System.out.print("How many attendances? ");
       attendanceCount = Integer.parseInt(sc.nextLine());
 
-      if (attendanceCount < 0 || maxAttendances < attendanceCount) {
+      if (attendanceCount < 0 || limits.getMaxAttendances() < attendanceCount) {
         System.out.println("Invalid attendance count");
-        System.out.printf("Min: 0, Max: %d\n", maxAttendances);
+        System.out.printf("Min: 0, Max: %d\n", limits.getMaxAttendances());
       }
-    } while (attendanceCount < 0 || maxAttendances < attendanceCount);
+    } while (attendanceCount < 0 || limits.getMaxAttendances() < attendanceCount);
 
-    Attendance[] attendances = new Attendance[maxAttendances];
+    Attendance[] attendances = new Attendance[limits.getMaxAttendances()];
     for (int i = 0; i < attendanceCount; i++) {
       attendances[i] = createAttendance(sc);
     }
@@ -388,7 +379,7 @@ public class Main {
       resignationChoice = Integer.parseInt(sc.nextLine());
     } while (resignationChoice != 0 && resignationChoice != 1);
 
-    Resignation[] resignations = new Resignation[maxResignations];
+    Resignation[] resignations = new Resignation[limits.getMaxResignations()];
 
     String reason;
     LocalDate date;
@@ -401,11 +392,11 @@ public class Main {
         System.out.print("How many resignations? ");
         resignationCount = Integer.parseInt(sc.nextLine());
 
-        if (resignationCount < 0 || maxResignations < resignationCount) {
+        if (resignationCount < 0 || limits.getMaxResignations() < resignationCount) {
           System.out.println("Invalid resignation count");
-          System.out.printf("Min: 0, Max: %d\n", maxResignations);
+          System.out.printf("Min: 0, Max: %d\n", limits.getMaxResignations());
         }
-      } while (resignationCount < 0 || maxResignations < resignationCount);
+      } while (resignationCount < 0 || limits.getMaxResignations() < resignationCount);
 
       for (int i = 0; i < resignationCount; i++) {
         System.out.print("Reason: ");
@@ -451,13 +442,13 @@ public class Main {
       System.out.print("How many insurances? ");
       insuranceCount = Integer.parseInt(sc.nextLine());
 
-      if (insuranceCount < 0 || maxInsurances < insuranceCount) {
+      if (insuranceCount < 0 || limits.getMaxInsurances() < insuranceCount) {
         System.out.println("Invalid insurance count");
-        System.out.printf("Min: 0, Max: %d\n", maxInsurances);
+        System.out.printf("Min: 0, Max: %d\n", limits.getMaxInsurances());
       }
-    } while (insuranceCount < 0 || maxInsurances < insuranceCount);
+    } while (insuranceCount < 0 || limits.getMaxInsurances() < insuranceCount);
 
-    Insurance[] insurances = new Insurance[maxInsurances];
+    Insurance[] insurances = new Insurance[limits.getMaxInsurances()];
     for (int i = 0; i < insuranceCount; i++) {
       insurances[i] = createInsurance(sc);
     }
@@ -860,22 +851,22 @@ public class Main {
   private static void setup(Scanner sc) {
     System.out.println("Setup system");
 
-    maxAccounts = inputNonNegative(sc, "Max accounts");
-    maxEmployees = inputNonNegative(sc, "Max employees");
-    maxDepartments = inputNonNegative(sc, "Max departments");
-    maxPositions = inputNonNegative(sc, "Max positions");
+    limits.setMaxAccounts(inputNonNegative(sc, "Max accounts"));
+    limits.setMaxEmployees(inputNonNegative(sc, "Max employees"));
+    limits.setMaxDepartments(inputNonNegative(sc, "Max departments"));
+    limits.setMaxPositions(inputNonNegative(sc, "Max positions"));
 
-    accounts = new Account[maxAccounts];
-    employees = new Employee[maxEmployees];
-    departments = new Department[maxDepartments];
-    positions = new Position[maxPositions];
+    accounts = new Account[limits.getMaxAccounts()];
+    employees = new Employee[limits.getMaxEmployees()];
+    departments = new Department[limits.getMaxDepartments()];
+    positions = new Position[limits.getMaxPositions()];
 
-    maxEvaluations = inputNonNegative(sc, "Max evaluations");
-    maxContracts = inputNonNegative(sc, "Max contracts");
-    maxPayrolls = inputNonNegative(sc, "Max payrolls");
-    maxAttendances = inputNonNegative(sc, "Max attendances");
-    maxInsurances = inputNonNegative(sc, "Max insurances");
-    maxResignations = inputNonNegative(sc, "Max resignations");
+    limits.setMaxEvaluations(inputNonNegative(sc, "Max evaluations"));
+    limits.setMaxContracts(inputNonNegative(sc, "Max contracts"));
+    limits.setMaxPayrolls(inputNonNegative(sc, "Max payrolls"));
+    limits.setMaxAttendances(inputNonNegative(sc, "Max attendances"));
+    limits.setMaxInsurances(inputNonNegative(sc, "Max insurances"));
+    limits.setMaxResignations(inputNonNegative(sc, "Max resignations"));
 
     System.out.print("\033[H\033[2J");
 
@@ -916,11 +907,11 @@ public class Main {
   }
 
   private static void createSampleData() {
-    if (maxAccounts < 2 || maxEmployees < 1 ||
-        maxDepartments < 2 || maxPositions < 2 ||
-        maxEvaluations < 1 || maxContracts < 1 ||
-        maxPayrolls < 1 || maxAttendances < 1 ||
-        maxInsurances < 1) {
+    if (limits.getMaxAccounts() < 2 || limits.getMaxEmployees() < 1 ||
+        limits.getMaxDepartments() < 2 || limits.getMaxPositions() < 2 ||
+        limits.getMaxEvaluations() < 1 || limits.getMaxContracts() < 1 ||
+        limits.getMaxPayrolls() < 1 || limits.getMaxAttendances() < 1 ||
+        limits.getMaxInsurances() < 1) {
       throw new IllegalStateException(
           "Not enough capacity. Increase the maximum values in setup().");
     }
@@ -968,7 +959,7 @@ public class Main {
         "District 1",
         "Ho Chi Minh City");
 
-    Evaluation[] evaluations = new Evaluation[maxEvaluations];
+    Evaluation[] evaluations = new Evaluation[limits.getMaxEvaluations()];
 
     evaluations[0] = new Evaluation(
         "October 2026",
@@ -980,7 +971,7 @@ public class Main {
         8.5,
         9.0);
 
-    Contract[] contracts = new Contract[maxContracts];
+    Contract[] contracts = new Contract[limits.getMaxContracts()];
 
     contracts[0] = new Contract(
         LocalDate.of(2025, 1, 1),
@@ -988,7 +979,7 @@ public class Main {
         Contract.ContractType.FULL_TIME,
         Contract.ContractStatus.ACTIVE);
 
-    Payroll[] payrolls = new Payroll[maxPayrolls];
+    Payroll[] payrolls = new Payroll[limits.getMaxPayrolls()];
 
     payrolls[0] = new Payroll(
         10,
@@ -1003,21 +994,21 @@ public class Main {
         10,
         LocalDate.of(2026, 1, 1));
 
-    Attendance[] attendances = new Attendance[maxAttendances];
+    Attendance[] attendances = new Attendance[limits.getMaxAttendances()];
 
     attendances[0] = new Attendance(
         LocalDate.of(2026, 10, 5),
         LocalTime.of(8, 0),
         LocalTime.of(17, 0));
 
-    Resignation[] resignations = new Resignation[maxInsurances];
+    Resignation[] resignations = new Resignation[limits.getMaxInsurances()];
 
     resignations[0] = new Resignation(
         "",
         LocalDate.of(2012, 1, 13),
         Resignation.ResignationStatus.REJECTED);
 
-    Insurance[] insurances = new Insurance[maxInsurances];
+    Insurance[] insurances = new Insurance[limits.getMaxInsurances()];
 
     insurances[0] = new Insurance(
         "INS001",
@@ -1118,8 +1109,7 @@ public class Main {
     setup(sc);
     dh.readData(accounts, employees, departments, positions);
     runUI(sc);
-    dh.writeLimit(maxAccounts, maxEmployees, maxDepartments, maxPositions, maxEvaluations, maxContracts, maxPayrolls,
-        maxAttendances, maxInsurances, maxResignations);
+    limits.writeLimit(limits);
     dh.writeData(accounts, employees, departments, positions);
 
     sc.close();

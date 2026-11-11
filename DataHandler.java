@@ -3,8 +3,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class DataHandler {
-  public void readData(Account[] accounts, Employee[] employees, Department[] departments, Position[] positions) {
+  private String currentDirectory = System.getProperty("user.dir");
+  private String directoryPath = currentDirectory + File.separator + "data";
 
+  private String accountPath = directoryPath + File.separator + "accounts.txt";
+  private String employeePath = directoryPath + File.separator + "employee.txt";
+  private String departmentPath = directoryPath + File.separator + "department.txt";
+  private String positionPath = directoryPath + File.separator + "position.txt";
+
+  public void readData(Account[] accounts, Employee[] employees, Department[] departments, Position[] positions) {
   }
 
   private String writeAccountData(Account[] accounts) {
@@ -278,51 +285,8 @@ public class DataHandler {
     return data;
   }
 
-  public void writeLimit(
-      int maxAccounts,
-      int maxEmployees,
-      int maxDepartments,
-      int maxPositions,
-      int maxEvaluations,
-      int maxContracts,
-      int maxPayrolls,
-      int maxAttendances,
-      int maxInsurances,
-      int maxResignations) {
-    String currentDirectory = System.getProperty("user.dir");
-    String directoryPath = currentDirectory + File.separator + "data";
-
-    try {
-      String limitPath = directoryPath + File.separator + "limit.txt";
-      FileWriter limitFileWriter = new FileWriter(limitPath);
-
-      limitFileWriter.write(maxAccounts + "\n");
-      limitFileWriter.write(maxEmployees + "\n");
-      limitFileWriter.write(maxDepartments + "\n");
-      limitFileWriter.write(maxPositions + "\n");
-      limitFileWriter.write(maxEvaluations + "\n");
-      limitFileWriter.write(maxContracts + "\n");
-      limitFileWriter.write(maxPayrolls + "\n");
-      limitFileWriter.write(maxAttendances + "\n");
-      limitFileWriter.write(maxInsurances + "\n");
-      limitFileWriter.write(maxResignations + "\n");
-
-      limitFileWriter.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
   public void writeData(Account[] accounts, Employee[] employees, Department[] departments, Position[] positions) {
     try {
-      String currentDirectory = System.getProperty("user.dir");
-      String directoryPath = currentDirectory + File.separator + "data";
-
-      String accountPath = directoryPath + File.separator + "accounts.txt";
-      String employeePath = directoryPath + File.separator + "employee.txt";
-      String departmentPath = directoryPath + File.separator + "department.txt";
-      String positionPath = directoryPath + File.separator + "position.txt";
-
       FileWriter accountFileWriter = new FileWriter(accountPath);
       FileWriter employeeFileWriter = new FileWriter(employeePath);
       FileWriter departmentFileWriter = new FileWriter(departmentPath);
