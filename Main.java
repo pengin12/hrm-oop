@@ -985,8 +985,10 @@ public class Main {
           account.addEmployee(employees, createEmployee(sc));
           break;
         case 5:
-          String editUsername = sc.nextLine();
-          account.editEmployee(accounts, editUsername);
+          System.out.println("Edit Employee");
+          System.out.print("Id: ");
+          String id = sc.nextLine();
+          account.editEmployee(sc, employees, id, positions, departments);
           break;
         case 6:
           String removeEmployee = sc.nextLine();

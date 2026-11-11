@@ -1,3 +1,7 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+
 public class AdminAccount extends Account {
     public AdminAccount(String username, String password, AccountStatus status) {
         super(username, password, status);
@@ -7,11 +11,12 @@ public class AdminAccount extends Account {
         for (int i = 0; i < employees.length; i++) {
             if (employees[i] == null) {
                 employees[i] = employee;
-                System.out.println("Da them tai khoan: " + employee.getFirstName());
+                System.out.println("Da them nhan vien: " + employee.getId()
+                        + " - " + employee.getFirstName() + " " + employee.getLastName());
                 return;
             }
         }
-        System.out.println("Mang tai khoan da day, khong them duoc.");
+        System.out.println("Mang nhan vien da day, khong them duoc.");
     }
 
     public void listEmployee(Account[] accounts) {
@@ -45,8 +50,203 @@ public class AdminAccount extends Account {
         System.out.println("Khong tim thay tai khoan: " + username);
     }
 
-    public void editEmployee(Account[] accounts, String username) {
-        System.out.println("Edit employee");
+    public Employee searchEmployee(Employee[] employees, String id) {
+        for (int i = 0; i < employees.length; i++) {
+            if (employees[i] != null && employees[i].getId().equals(id)) {
+                return employees[i];
+            }
+        }
+        return null;
+    }
+
+    public void printPositions(Position[] positions) {
+        System.out.println("Danh sach vi tri:");
+        for (int i = 0; i < positions.length; i++) {
+            if (positions[i] != null) {
+                System.out.println((i + 1) + ". " + positions[i].getName()
+                        + " | Position Coefficient: " + positions[i].getPositionCoefficient()
+                        + " | Responsibilities: " + positions[i].getResponsibilities());
+            }
+        }
+    }
+
+    public void printDepartment(Department[] departments) {
+        System.out.println("Danh sach phong ban:");
+        for (int i = 0; i < departments.length; i++) {
+            if (departments[i] != null) {
+                System.out.println((i + 1) + ". " + departments[i].getName()
+                        + " | SDT: " + departments[i].getPhone()
+                        + " | Vi tri: " + departments[i].getPosition());
+            }
+        }
+    }
+
+    private void editEmployeeHireDate(Scanner sc, Employee employee) {
+        System.out.println("Set Hire Date");
+
+        System.out.println("Current hire date: " + employee.getHireDate());
+
+        System.out.print("Hire date (dd/MM/yyyy): ");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate hireDate = LocalDate.parse(sc.nextLine(), dateFormatter);
+        employee.setHireDate(hireDate);
+
+        System.out.print("\033[H\033[2J");
+        System.out.println("Set hire date successfully");
+    }
+
+    private void editEmployeeSpecialization(Scanner sc, Employee employee) {
+        System.out.println("Set Specialization");
+
+        System.out.println("Current specialization: " + employee.getSpecialization());
+
+        System.out.print("Specialization: ");
+        employee.setSpecialization(sc.nextLine());
+
+        System.out.print("\033[H\033[2J");
+        System.out.println("Set specialization successfully");
+    }
+
+    private void editEmployeeStatus(Scanner sc, Employee employee) {
+        System.out.println("Set Employee Status");
+
+        System.out.println("Current employee status: " + employee.getStatus());
+
+        int statusNum = 0;
+        do {
+            System.out.println("[1] Working");
+            System.out.println("[2] On leave");
+            System.out.println("[3] Resigned");
+            System.out.print("Status:");
+
+            statusNum = Integer.parseInt(sc.nextLine());
+        } while (statusNum < 1 || 3 < statusNum);
+
+        switch (statusNum) {
+            case 1:
+                employee.setStatus(Employee.EmployeeStatus.WORKING);
+                break;
+            case 2:
+                employee.setStatus(Employee.EmployeeStatus.ON_LEAVE);
+                break;
+            case 3:
+                employee.setStatus(Employee.EmployeeStatus.RESIGNED);
+                break;
+
+            default:
+                break;
+        }
+
+        System.out.print("\033[H\033[2J");
+        System.out.println("Set status successfully");
+    }
+
+    private void editEmployeeTaxId(Scanner sc, Employee employee) {
+        System.out.println("Set Tax Id");
+
+        System.out.println("Current tax id: " + employee.getTaxId());
+
+        System.out.print("Tax id: ");
+        employee.setTaxId(sc.nextLine());
+
+        System.out.print("\033[H\033[2J");
+        System.out.println("Set tax id successfully");
+    }
+
+    private void editEmployeePosition(Scanner sc, Employee employee, Position[] positions) {
+        System.out.println("Set Position");
+
+        System.out.println("Current position: " + employee.getPosition().getName());
+
+        int choice;
+        do {
+            printPositions(positions);
+            System.out.print("Position number: ");
+            choice = Integer.parseInt(sc.nextLine());
+
+            if (positions[choice] == null) {
+                System.out.print("\033[H\033[2J");
+                System.out.println("Position not exist");
+            }
+        } while (positions[choice] == null);
+
+        System.out.print("\033[H\033[2J");
+        System.out.println("Set position successfully");
+    }
+
+    private void editEmployeeDepartment(Scanner sc, Employee employee, Department[] departments) {
+        System.out.println("Set Department");
+
+        System.out.println("Current department: " + employee.getDepartment().getName());
+
+        int choice;
+        do {
+            printDepartments(departments);
+            System.out.print("Department number: ");
+            choice = Integer.parseInt(sc.nextLine());
+
+            if (departments[choice] == null) {
+                System.out.print("\033[H\033[2J");
+                System.out.println("Department not exist");
+            }
+        } while (departments[choice] == null);
+
+        System.out.print("\033[H\033[2J");
+        System.out.println("Set department successfully");
+    }
+
+    public void editEmployee(Scanner sc, Employee[] employees, String id, Position[] positions,
+            Department[] departments) {
+        Employee employee = this.searchEmployee(employees, id);
+        if (employee == null) {
+            System.out.println("Khong tim thay nhan vien: " + id);
+            return;
+        }
+
+        int setChoice;
+        do {
+            System.out.println("[0] Exit");
+            System.out.println("[1] Hire date");
+            System.out.println("[2] Specialization");
+            System.out.println("[3] Status");
+            System.out.println("[4] Tax id");
+            System.out.println("[5] Position");
+            System.out.println("[6] Department");
+            System.out.print("Choice: ");
+            setChoice = Integer.parseInt(sc.nextLine());
+
+            System.out.print("\033[H\033[2J");
+
+            switch (setChoice) {
+                case 0:
+                    break;
+                case 1:
+                    editEmployeeHireDate(sc, employee);
+                    break;
+                case 2:
+                    editEmployeeSpecialization(sc, employee);
+                    break;
+                case 3:
+                    editEmployeeStatus(sc, employee);
+                    break;
+                case 4:
+                    editEmployeeTaxId(sc, employee);
+                    break;
+                case 5:
+                    editEmployeePosition(sc, employee, positions);
+                    break;
+                case 6:
+                    editEmployeeDepartment(sc, employee, departments);
+                    break;
+
+                default:
+                    System.out.print("\033[H\033[2J");
+                    System.out.println("Wrong input");
+                    break;
+            }
+        } while (setChoice != 0);
+
+        System.out.println("Da sua nhan vien: " + id);
     }
 
     public void printEmployee(Employee[] employees) {
