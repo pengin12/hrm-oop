@@ -948,6 +948,7 @@ public class Main {
 
       System.out.print("\033[H\033[2J");
 
+      String id;
       switch (choice) {
         case 0:
           return;
@@ -987,7 +988,7 @@ public class Main {
         case 5:
           System.out.println("Edit Employee");
           System.out.print("Id: ");
-          String id = sc.nextLine();
+          id = sc.nextLine();
           account.editEmployee(sc, employees, id, positions, departments);
           break;
         case 6:
@@ -1001,7 +1002,10 @@ public class Main {
           account.printDepartments(departments);
           break;
         case 9:
-          account.printPayrolls();
+          System.out.println("Print payrolls");
+          System.out.print("Id: ");
+          id = sc.nextLine();
+          account.printPayrolls(employees, id);
           break;
         case 10:
           System.out.print("Reply to username: ");

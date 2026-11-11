@@ -261,8 +261,24 @@ public class AdminAccount extends Account {
         }
     }
 
-    public void printPayrolls() {
-        System.out.println("Print Payroll");
+    public void printPayrolls(Employee[] employees, String id) {
+        Employee employee = this.searchEmployee(employees, id);
+        if (employee == null) {
+            System.out.println("Khong tim thay nhan vien: " + id);
+            return;
+        }
+        System.out.println("Bang luong cua " + employee.getId() + ":");
+        Payroll[] payrolls = employee.getPayrolls();
+        boolean found = false;
+        for (int i = 0; i < payrolls.length; i++) {
+            if (payrolls[i] != null) {
+                payrolls[i].displayPayroll();
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("Chua co bang luong.");
+        }
     }
 
     public void searchEmployee(Employee[] employees) {
