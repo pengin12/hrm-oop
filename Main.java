@@ -38,68 +38,6 @@ public class Main {
     POSITION
   }
 
-  private static Account createAccount(Scanner sc) {
-    System.out.print("\033[H\033[2J");
-    System.out.println("Create Account");
-    System.out.print("Username: ");
-    String username = sc.nextLine();
-
-    System.out.print("Password: ");
-    String password = sc.nextLine();
-
-    int statusNum = 0;
-    Account.AccountStatus status = Account.AccountStatus.ACTIVE;
-    do {
-      System.out.println("[1] Active");
-      System.out.println("[2] Inactive");
-      System.out.println("[3] Suspended");
-      System.out.println("[4] Pending");
-      System.out.println("[5] Locked");
-      System.out.println("[6] Terminated");
-      System.out.print("Status:");
-
-      statusNum = Integer.parseInt(sc.nextLine());
-    } while (statusNum < 1 || 6 < statusNum);
-
-    switch (statusNum) {
-      case 1:
-        status = Account.AccountStatus.ACTIVE;
-        break;
-      case 2:
-        status = Account.AccountStatus.INACTIVE;
-        break;
-      case 3:
-        status = Account.AccountStatus.SUSPENDED;
-        break;
-      case 4:
-        status = Account.AccountStatus.PENDING;
-        break;
-      case 5:
-        status = Account.AccountStatus.LOCKED;
-        break;
-      case 6:
-        status = Account.AccountStatus.TERMINATED;
-        break;
-
-      default:
-        break;
-    }
-
-    int type;
-    do {
-      System.out.println("[1] Admin");
-      System.out.println("[2] Employee");
-      System.out.print("Choose: ");
-      type = Integer.parseInt(sc.nextLine());
-    } while (type != 1 && type != 2);
-
-    if (type == 1) {
-      return new AdminAccount(username, password, status);
-    } else {
-      return new EmployeeAccount(username, password, status);
-    }
-  }
-
   private static Address createAddress(Scanner sc) {
     System.out.print("Number: ");
     int number = Integer.parseInt(sc.nextLine());
@@ -703,67 +641,6 @@ public class Main {
     } while (choice < 0 || 4 < choice);
 
     return null;
-  }
-
-  private static int choiceCount(Scanner sc) {
-    return inputNonNegative(sc, "How many");
-  }
-
-  private static void createNElements(Scanner sc) {
-    CreatingType type = choiceType(sc);
-    if (type == null) {
-      return;
-    }
-
-    int count = choiceCount(sc);
-
-    for (int i = 0; i < count; i++) {
-      switch (type) {
-        case ACCOUNT:
-          if (accountsOccupied + 1 >= accounts.length) {
-            System.out.print("\033[H\033[2J");
-            System.out.println("Account storage is full");
-            break;
-          }
-
-          accounts[accountsOccupied + 1] = createAccount(sc);
-          accountsOccupied++;
-          break;
-        case EMPLOYEE:
-          if (employeesOccupied + 1 >= employees.length) {
-            System.out.print("\033[H\033[2J");
-            System.out.println("Employee storage is full");
-            break;
-          }
-
-          employees[employeesOccupied + 1] = createEmployee(sc);
-          employeesOccupied++;
-          break;
-        case DEPARTMENT:
-          if (departmentsOccupied + 1 >= departments.length) {
-            System.out.print("\033[H\033[2J");
-            System.out.println("Department storage is full");
-            break;
-          }
-
-          departments[departmentsOccupied + 1] = createDepartment(sc);
-          departmentsOccupied++;
-          break;
-        case POSITION:
-          if (positionsOccupied + 1 >= positions.length) {
-            System.out.print("\033[H\033[2J");
-            System.out.println("Position storage is full");
-            break;
-          }
-
-          positions[positionsOccupied + 1] = createPosition(sc);
-          positionsOccupied++;
-          break;
-
-        default:
-          break;
-      }
-    }
   }
 
   private static int getIndex(String username) {
@@ -1528,9 +1405,8 @@ public class Main {
     int choice;
     do {
       System.out.println("[0] Exit");
-      System.out.println("[1] Create N elements");
-      System.out.println("[2] Login");
-      System.out.println("[3] Create sample data");
+      System.out.println("[1] Login");
+      System.out.println("[2] Create sample data");
       System.out.print("Choice: ");
       choice = Integer.parseInt(sc.nextLine());
 
@@ -1540,9 +1416,6 @@ public class Main {
         case 0:
           return;
         case 1:
-          createNElements(sc);
-          break;
-        case 2:
           String username;
           int index;
           do {
@@ -1564,7 +1437,7 @@ public class Main {
             }
           }
           break;
-        case 3:
+        case 2:
           createSampleData();
           break;
 

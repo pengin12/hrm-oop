@@ -288,4 +288,66 @@ public class AdminAccount extends Account {
     public void searchDepartment(Department[] departments) {
         System.out.println("Search departments");
     }
+
+    public Account createAccount(Scanner sc) {
+        System.out.print("\033[H\033[2J");
+        System.out.println("Create Account");
+        System.out.print("Username: ");
+        String username = sc.nextLine();
+
+        System.out.print("Password: ");
+        String password = sc.nextLine();
+
+        int statusNum = 0;
+        Account.AccountStatus status = Account.AccountStatus.ACTIVE;
+        do {
+            System.out.println("[1] Active");
+            System.out.println("[2] Inactive");
+            System.out.println("[3] Suspended");
+            System.out.println("[4] Pending");
+            System.out.println("[5] Locked");
+            System.out.println("[6] Terminated");
+            System.out.print("Status:");
+
+            statusNum = Integer.parseInt(sc.nextLine());
+        } while (statusNum < 1 || 6 < statusNum);
+
+        switch (statusNum) {
+            case 1:
+                status = Account.AccountStatus.ACTIVE;
+                break;
+            case 2:
+                status = Account.AccountStatus.INACTIVE;
+                break;
+            case 3:
+                status = Account.AccountStatus.SUSPENDED;
+                break;
+            case 4:
+                status = Account.AccountStatus.PENDING;
+                break;
+            case 5:
+                status = Account.AccountStatus.LOCKED;
+                break;
+            case 6:
+                status = Account.AccountStatus.TERMINATED;
+                break;
+
+            default:
+                break;
+        }
+
+        int type;
+        do {
+            System.out.println("[1] Admin");
+            System.out.println("[2] Employee");
+            System.out.print("Choose: ");
+            type = Integer.parseInt(sc.nextLine());
+        } while (type != 1 && type != 2);
+
+        if (type == 1) {
+            return new AdminAccount(username, password, status);
+        } else {
+            return new EmployeeAccount(username, password, status);
+        }
+    }
 }
