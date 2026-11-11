@@ -7,7 +7,7 @@ public class DataHandler {
 
   }
 
-  private static String writeAccountData(Account[] accounts) {
+  private String writeAccountData(Account[] accounts) {
     String data = "";
 
     for (int i = 0; i < accounts.length; i++) {
@@ -31,7 +31,7 @@ public class DataHandler {
     return data;
   }
 
-  private static String writeEmployeeData(Employee[] employees) {
+  private String writeEmployeeData(Employee[] employees) {
     String data = "";
 
     for (int i = 0; i < employees.length; i++) {
@@ -242,7 +242,7 @@ public class DataHandler {
     return data;
   }
 
-  private static String writeDepartmentData(Department[] departments) {
+  private String writeDepartmentData(Department[] departments) {
     String data = "";
 
     for (int i = 0; i < departments.length; i++) {
@@ -260,7 +260,7 @@ public class DataHandler {
     return data;
   }
 
-  private static String writePositionData(Position[] positions) {
+  private String writePositionData(Position[] positions) {
     String data = "";
 
     for (int i = 0; i < positions.length; i++) {
@@ -276,6 +276,41 @@ public class DataHandler {
     }
 
     return data;
+  }
+
+  public void writeLimit(
+      int maxAccounts,
+      int maxEmployees,
+      int maxDepartments,
+      int maxPositions,
+      int maxEvaluations,
+      int maxContracts,
+      int maxPayrolls,
+      int maxAttendances,
+      int maxInsurances,
+      int maxResignations) {
+    String currentDirectory = System.getProperty("user.dir");
+    String directoryPath = currentDirectory + File.separator + "data";
+
+    try {
+      String limitPath = directoryPath + File.separator + "limit.txt";
+      FileWriter limitFileWriter = new FileWriter(limitPath);
+
+      limitFileWriter.write(maxAccounts + "\n");
+      limitFileWriter.write(maxEmployees + "\n");
+      limitFileWriter.write(maxDepartments + "\n");
+      limitFileWriter.write(maxPositions + "\n");
+      limitFileWriter.write(maxEvaluations + "\n");
+      limitFileWriter.write(maxContracts + "\n");
+      limitFileWriter.write(maxPayrolls + "\n");
+      limitFileWriter.write(maxAttendances + "\n");
+      limitFileWriter.write(maxInsurances + "\n");
+      limitFileWriter.write(maxResignations + "\n");
+
+      limitFileWriter.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void writeData(Account[] accounts, Employee[] employees, Department[] departments, Position[] positions) {
@@ -306,5 +341,4 @@ public class DataHandler {
       e.printStackTrace();
     }
   }
-
 }

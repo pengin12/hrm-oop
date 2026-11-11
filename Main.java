@@ -1118,6 +1118,8 @@ public class Main {
     setup(sc);
     dh.readData(accounts, employees, departments, positions);
     runUI(sc);
+    dh.writeLimit(maxAccounts, maxEmployees, maxDepartments, maxPositions, maxEvaluations, maxContracts, maxPayrolls,
+        maxAttendances, maxInsurances, maxResignations);
     dh.writeData(accounts, employees, departments, positions);
 
     sc.close();
