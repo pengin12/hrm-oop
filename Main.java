@@ -7,11 +7,14 @@ import java.util.Scanner;
 
 public class Main {
   private static LimitHandler limits = new LimitHandler();
+  private static DataHandler data = new DataHandler();
 
-  private static Account[] accounts;
-  private static Employee[] employees;
-  private static Department[] departments;
-  private static Position[] positions;
+  static {
+    data.setAccounts(new Account[limits.getMaxAccounts()]);
+    data.setEmployees(new Employee[limits.getMaxEmployees()]);
+    data.setDepartments(new Department[limits.getMaxDepartments()]);
+    data.setPositions(new Position[limits.getMaxPositions()]);
+  }
 
   private static int accountsOccupied = -1;
   private static int employeesOccupied = -1;
@@ -464,12 +467,12 @@ public class Main {
 
     int index;
     do {
-      for (int i = 0; i < positions.length; i++) {
-        if (positions[i] == null) {
+      for (int i = 0; i < data.getPositions().length; i++) {
+        if (data.getPositions()[i] == null) {
           break;
         }
 
-        System.out.printf("[%d] %s\n", i + 1, positions[i].getName());
+        System.out.printf("[%d] %s\n", i + 1, data.getPositions()[i].getName());
       }
 
       System.out.print("Choose positions: ");
@@ -480,7 +483,7 @@ public class Main {
       }
     } while (index < 0 || index > positionsOccupied);
 
-    return positions[index];
+    return data.getPositions()[index];
   }
 
   private static Department chooseDepartment(Scanner sc) {
@@ -491,12 +494,12 @@ public class Main {
 
     int index;
     do {
-      for (int i = 0; i < departments.length; i++) {
-        if (departments[i] == null) {
+      for (int i = 0; i < data.getDepartments().length; i++) {
+        if (data.getDepartments()[i] == null) {
           break;
         }
 
-        System.out.printf("[%d] %s\n", i + 1, departments[i].getName());
+        System.out.printf("[%d] %s\n", i + 1, data.getDepartments()[i].getName());
       }
 
       System.out.print("Choose department: ");
@@ -507,7 +510,7 @@ public class Main {
       }
     } while (index < 0 || index > departmentsOccupied);
 
-    return departments[index];
+    return data.getDepartments()[index];
   }
 
   private static Employee createEmployee(Scanner sc) {
@@ -565,8 +568,8 @@ public class Main {
   }
 
   private static int getIndex(String username) {
-    for (int i = 0; i < accounts.length; i++) {
-      if (accounts[i] != null && accounts[i].getUsername().equals(username)) {
+    for (int i = 0; i < data.getAccounts().length; i++) {
+      if (data.getAccounts()[i] != null && data.getAccounts()[i].getUsername().equals(username)) {
         return i;
       }
     }
@@ -583,12 +586,12 @@ public class Main {
     System.out.print("Password: ");
     String password = sc.nextLine();
 
-    if (!password.equals(accounts[index].getPassword())) {
+    if (!password.equals(data.getAccounts()[index].getPassword())) {
       System.out.println("Wrong password");
       return false;
     }
 
-    if (accounts[index].getStatus() != Account.AccountStatus.ACTIVE) {
+    if (data.getAccounts()[index].getStatus() != Account.AccountStatus.ACTIVE) {
       System.out.println("Account is not active");
       return false;
     }
@@ -615,7 +618,7 @@ public class Main {
     do {
       System.out.print("Set username: ");
       username = sc.nextLine();
-    } while (usernameExist(accounts, current, username));
+    } while (usernameExist(data.getAccounts(), current, username));
 
     current.setUsername(username);
     System.out.print("\033[H\033[2J");
@@ -699,10 +702,10 @@ public class Main {
 
           switch (setChoice) {
             case 1:
-              setAccountName(sc, accounts, account);
+              setAccountName(sc, data.getAccounts(), account);
               break;
             case 2:
-              setAccountStatus(sc, accounts, account);
+              setAccountStatus(sc, data.getAccounts(), account);
               break;
 
             default:
@@ -770,10 +773,10 @@ public class Main {
 
           switch (setChoice) {
             case 1:
-              setAccountName(sc, accounts, account);
+              setAccountName(sc, data.getAccounts(), account);
               break;
             case 2:
-              setAccountStatus(sc, accounts, account);
+              setAccountStatus(sc, data.getAccounts(), account);
               break;
 
             default:
@@ -781,29 +784,29 @@ public class Main {
           }
           break;
         case 4:
-          account.addEmployee(employees, createEmployee(sc));
+          account.addEmployee(data.getEmployees(), createEmployee(sc));
           break;
         case 5:
           System.out.println("Edit Employee");
           System.out.print("Id: ");
           id = sc.nextLine();
-          account.editEmployee(sc, employees, id, positions, departments);
+          account.editEmployee(sc, data.getEmployees(), id, data.getPositions(), data.getDepartments());
           break;
         case 6:
           String removeEmployee = sc.nextLine();
-          account.removeEmployee(accounts, removeEmployee);
+          account.removeEmployee(data.getAccounts(), removeEmployee);
           break;
         case 7:
-          account.printEmployees(employees);
+          account.printEmployees(data.getEmployees());
           break;
         case 8:
-          account.printDepartments(departments);
+          account.printDepartments(data.getDepartments());
           break;
         case 9:
           System.out.println("Print payrolls");
           System.out.print("Id: ");
           id = sc.nextLine();
-          account.printPayrolls(employees, id);
+          account.printPayrolls(data.getEmployees(), id);
           break;
         case 10:
           System.out.print("Reply to username: ");
@@ -812,19 +815,19 @@ public class Main {
           System.out.print("Reply: ");
           String reply = sc.nextLine();
 
-          account.replyRequest(accounts, replyUsername, reply);
+          account.replyRequest(data.getAccounts(), replyUsername, reply);
           break;
         case 11:
-          account.searchEmployee(employees);
+          account.searchEmployee(data.getEmployees());
           break;
         case 12:
-          account.searchDepartment(departments);
+          account.searchDepartment(data.getDepartments());
           break;
         case 13:
-          account.createPosition(sc, positions);
+          account.createPosition(sc, data.getPositions());
           break;
         case 14:
-          account.createDepartment(sc, departments);
+          account.createDepartment(sc, data.getDepartments());
           break;
 
         default:
@@ -856,10 +859,10 @@ public class Main {
     limits.setMaxDepartments(inputNonNegative(sc, "Max departments"));
     limits.setMaxPositions(inputNonNegative(sc, "Max positions"));
 
-    accounts = new Account[limits.getMaxAccounts()];
-    employees = new Employee[limits.getMaxEmployees()];
-    departments = new Department[limits.getMaxDepartments()];
-    positions = new Position[limits.getMaxPositions()];
+    data.setAccounts(new Account[limits.getMaxAccounts()]);
+    data.setEmployees(new Employee[limits.getMaxEmployees()]);
+    data.setDepartments(new Department[limits.getMaxDepartments()]);
+    data.setPositions(new Position[limits.getMaxPositions()]);
 
     limits.setMaxEvaluations(inputNonNegative(sc, "Max evaluations"));
     limits.setMaxContracts(inputNonNegative(sc, "Max contracts"));
@@ -879,7 +882,7 @@ public class Main {
         directory.mkdir();
       }
 
-      String accountPath = directoryPath + File.separator + "accounts.txt";
+      String accountPath = directoryPath + File.separator + "data.getAccounts().txt";
       String employeePath = directoryPath + File.separator + "employee.txt";
       String departmentPath = directoryPath + File.separator + "department.txt";
       String positionPath = directoryPath + File.separator + "position.txt";
@@ -916,36 +919,36 @@ public class Main {
           "Not enough capacity. Increase the maximum values in setup().");
     }
 
-    accounts[0] = new AdminAccount(
+    data.getAccounts()[0] = new AdminAccount(
         "admin",
         "admin123",
         Account.AccountStatus.ACTIVE);
 
-    accounts[1] = new EmployeeAccount(
+    data.getAccounts()[1] = new EmployeeAccount(
         "john",
         "john123",
         Account.AccountStatus.ACTIVE);
 
     accountsOccupied = 1;
 
-    departments[0] = new Department(
+    data.getDepartments()[0] = new Department(
         "IT",
         "0901234567",
         "Software Development");
 
-    departments[1] = new Department(
+    data.getDepartments()[1] = new Department(
         "Human Resources",
         "0907654321",
         "Recruitment");
 
     departmentsOccupied = 1;
 
-    positions[0] = new Position(
+    data.getPositions()[0] = new Position(
         "Develop and maintain software",
         "Software Developer",
         2.5);
 
-    positions[1] = new Position(
+    data.getPositions()[1] = new Position(
         "Manage recruitment and employee relations",
         "HR Manager",
         3.0);
@@ -1017,7 +1020,7 @@ public class Main {
         LocalDate.of(2027, 12, 31),
         0.08);
 
-    employees[0] = new Employee(
+    data.getEmployees()[0] = new Employee(
         "John",
         "Smith",
         "john.smith@example.com",
@@ -1036,8 +1039,8 @@ public class Main {
         resignations,
         "TAX001",
         insurances,
-        positions[0],
-        departments[0]);
+        data.getPositions()[0],
+        data.getDepartments()[0]);
 
     employeesOccupied = 0;
 
@@ -1060,14 +1063,15 @@ public class Main {
         case 0:
           return;
         case 1:
-          if (accountsOccupied >= accounts.length) {
+          if (accountsOccupied >= data.getAccounts().length) {
             System.out.println("Accounts storage is full");
           }
 
           System.out.print("Username: ");
           String adminUsername = sc.nextLine();
           String adminPassword = sc.nextLine();
-          accounts[accountsOccupied + 1] = new AdminAccount(adminUsername, adminPassword, Account.AccountStatus.ACTIVE);
+          data.getAccounts()[accountsOccupied + 1] = new AdminAccount(adminUsername, adminPassword,
+              Account.AccountStatus.ACTIVE);
 
           break;
         case 2:
@@ -1085,10 +1089,10 @@ public class Main {
           boolean isLoggedIn = logIn(index, sc);
 
           if (isLoggedIn) {
-            if (accounts[index] instanceof EmployeeAccount) {
-              runEmployeeUI((EmployeeAccount) accounts[index], sc);
+            if (data.getAccounts()[index] instanceof EmployeeAccount) {
+              runEmployeeUI((EmployeeAccount) data.getAccounts()[index], sc);
             } else {
-              runAdminUI((AdminAccount) accounts[index], sc);
+              runAdminUI((AdminAccount) data.getAccounts()[index], sc);
             }
           }
           break;
@@ -1104,13 +1108,12 @@ public class Main {
 
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
-    DataHandler dh = new DataHandler();
 
     setup(sc);
-    dh.readData(accounts, employees, departments, positions);
+    data.readData();
     runUI(sc);
-    limits.writeLimit(limits);
-    dh.writeData(accounts, employees, departments, positions);
+    limits.writeLimit();
+    data.writeData();
 
     sc.close();
   }

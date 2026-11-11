@@ -1,8 +1,14 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class DataHandler {
+  private Account[] accounts;
+  private Employee[] employees;
+  private Department[] departments;
+  private Position[] positions;
+
   private String currentDirectory = System.getProperty("user.dir");
   private String directoryPath = currentDirectory + File.separator + "data";
 
@@ -11,7 +17,17 @@ public class DataHandler {
   private String departmentPath = directoryPath + File.separator + "department.txt";
   private String positionPath = directoryPath + File.separator + "position.txt";
 
-  public void readData(Account[] accounts, Employee[] employees, Department[] departments, Position[] positions) {
+  private Account[] readAccountsData() {
+    try (Scanner sc = new Scanner(accountPath)) {
+
+    }
+
+  }
+
+  public DataHandler readData() {
+    DataHandler data = new DataHandler();
+
+    return data;
   }
 
   private String writeAccountData(Account[] accounts) {
@@ -285,7 +301,7 @@ public class DataHandler {
     return data;
   }
 
-  public void writeData(Account[] accounts, Employee[] employees, Department[] departments, Position[] positions) {
+  public void writeData() {
     try {
       FileWriter accountFileWriter = new FileWriter(accountPath);
       FileWriter employeeFileWriter = new FileWriter(employeePath);
@@ -304,5 +320,37 @@ public class DataHandler {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public Account[] getAccounts() {
+    return accounts;
+  }
+
+  public void setAccounts(Account[] accounts) {
+    this.accounts = accounts;
+  }
+
+  public Employee[] getEmployees() {
+    return employees;
+  }
+
+  public void setEmployees(Employee[] employees) {
+    this.employees = employees;
+  }
+
+  public Department[] getDepartments() {
+    return departments;
+  }
+
+  public void setDepartments(Department[] departments) {
+    this.departments = departments;
+  }
+
+  public Position[] getPositions() {
+    return positions;
+  }
+
+  public void setPositions(Position[] positions) {
+    this.positions = positions;
   }
 }

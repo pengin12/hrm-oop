@@ -38,7 +38,7 @@ public class LimitHandler {
     return limit;
   }
 
-  public void writeLimit(LimitHandler limits) {
+  public void writeLimit() {
     try {
       FileWriter limitFileWriter = new FileWriter(limitPath);
 
