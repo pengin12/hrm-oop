@@ -995,7 +995,7 @@ public class Main {
           account.removeEmployee(accounts, removeEmployee);
           break;
         case 7:
-          account.printEmployee(employees);
+          account.printEmployees(employees);
           break;
         case 8:
           account.printDepartments(departments);

@@ -70,7 +70,7 @@ public class AdminAccount extends Account {
         }
     }
 
-    public void printDepartment(Department[] departments) {
+    public void printDepartments(Department[] departments) {
         System.out.println("Danh sach phong ban:");
         for (int i = 0; i < departments.length; i++) {
             if (departments[i] != null) {
@@ -249,12 +249,16 @@ public class AdminAccount extends Account {
         System.out.println("Da sua nhan vien: " + id);
     }
 
-    public void printEmployee(Employee[] employees) {
-        System.out.println("Print Employee");
-    }
-
-    public void printDepartments(Department[] departments) {
-        System.out.println("Print Departments");
+    public void printEmployees(Employee[] employees) {
+        System.out.println("Danh sach nhan vien:");
+        for (int i = 0; i < employees.length; i++) {
+            if (employees[i] != null) {
+                System.out.println((i + 1) + ". " + employees[i].getId()
+                        + " | " + employees[i].getFirstName() + " " + employees[i].getLastName()
+                        + " | " + employees[i].getDepartment().getName()
+                        + " | " + employees[i].getStatus());
+            }
+        }
     }
 
     public void printPayrolls() {
