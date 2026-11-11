@@ -31,13 +31,6 @@ public class Main {
   private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
   private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-  private enum CreatingType {
-    ACCOUNT,
-    EMPLOYEE,
-    DEPARTMENT,
-    POSITION
-  }
-
   private static Address createAddress(Scanner sc) {
     System.out.print("Number: ");
     int number = Integer.parseInt(sc.nextLine());
@@ -581,68 +574,6 @@ public class Main {
         status, evaluations, contracts, payrolls, attendances, resignations, taxId, insurances, position, department);
   }
 
-  private static Department createDepartment(Scanner sc) {
-    System.out.print("\033[H\033[2J");
-    System.out.println("Create Department");
-    System.out.print("Name: ");
-    String name = sc.nextLine();
-
-    System.out.print("Phone: ");
-    String phone = sc.nextLine();
-
-    System.out.print("Position: ");
-    String position = sc.nextLine();
-
-    return new Department(name, phone, position);
-  }
-
-  private static Position createPosition(Scanner sc) {
-    System.out.print("\033[H\033[2J");
-    System.out.println("Create Position");
-    System.out.print("Name: ");
-    String name = sc.nextLine();
-
-    System.out.print("Position coefficient: ");
-    double positionCoefficient = Double.parseDouble(sc.nextLine());
-
-    System.out.print("Responsibilities: ");
-    String responsibilities = sc.nextLine();
-
-    return new Position(responsibilities, name, positionCoefficient);
-  }
-
-  private static CreatingType choiceType(Scanner sc) {
-    int choice;
-
-    do {
-      System.out.println("[0] Exit");
-      System.out.println("[1] Account");
-      System.out.println("[2] Employee");
-      System.out.println("[3] Department");
-      System.out.println("[4] Position");
-      System.out.print("Create: ");
-
-      choice = Integer.parseInt(sc.nextLine());
-      switch (choice) {
-        case 0:
-          return null;
-        case 1:
-          return CreatingType.ACCOUNT;
-        case 2:
-          return CreatingType.EMPLOYEE;
-        case 3:
-          return CreatingType.DEPARTMENT;
-        case 4:
-          return CreatingType.POSITION;
-
-        default:
-          break;
-      }
-    } while (choice < 0 || 4 < choice);
-
-    return null;
-  }
-
   private static int getIndex(String username) {
     for (int i = 0; i < accounts.length; i++) {
       if (accounts[i] != null && accounts[i].getUsername().equals(username)) {
@@ -813,7 +744,7 @@ public class Main {
   private static void runAdminUI(AdminAccount account, Scanner sc) {
     String[] options = { "Logout", "Change password", "Get info", "Set info", "Add employee", "Edit employee",
         "Remove employee", "Print employees", "Print departments", "Print payrolls", "Reply request", "Search employee",
-        "Search department" };
+        "Search department", "Create Position", "Create Department" };
 
     int choice;
     do {
@@ -898,6 +829,12 @@ public class Main {
           break;
         case 12:
           account.searchDepartment(departments);
+          break;
+        case 13:
+          account.createPosition(sc, positions);
+          break;
+        case 14:
+          account.createDepartment(sc, departments);
           break;
 
         default:
@@ -1405,8 +1342,9 @@ public class Main {
     int choice;
     do {
       System.out.println("[0] Exit");
-      System.out.println("[1] Login");
-      System.out.println("[2] Create sample data");
+      System.out.println("[1] Create admin account");
+      System.out.println("[2] Login");
+      System.out.println("[3] Create sample data");
       System.out.print("Choice: ");
       choice = Integer.parseInt(sc.nextLine());
 
@@ -1416,6 +1354,17 @@ public class Main {
         case 0:
           return;
         case 1:
+          if (accountsOccupied >= accounts.length) {
+            System.out.println("Accounts storage is full");
+          }
+
+          System.out.print("Username: ");
+          String adminUsername = sc.nextLine();
+          String adminPassword = sc.nextLine();
+          accounts[accountsOccupied + 1] = new AdminAccount(adminUsername, adminPassword, Account.AccountStatus.ACTIVE);
+
+          break;
+        case 2:
           String username;
           int index;
           do {
@@ -1437,7 +1386,7 @@ public class Main {
             }
           }
           break;
-        case 2:
+        case 3:
           createSampleData();
           break;
 

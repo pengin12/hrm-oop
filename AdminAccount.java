@@ -350,4 +350,34 @@ public class AdminAccount extends Account {
             return new EmployeeAccount(username, password, status);
         }
     }
+
+    public Department createDepartment(Scanner sc, Department[] departments) {
+        System.out.print("\033[H\033[2J");
+        System.out.println("Create Department");
+        System.out.print("Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Phone: ");
+        String phone = sc.nextLine();
+
+        System.out.print("Position: ");
+        String position = sc.nextLine();
+
+        return new Department(name, phone, position);
+    }
+
+    public Position createPosition(Scanner sc, Position[] positions) {
+        System.out.print("\033[H\033[2J");
+        System.out.println("Create Position");
+        System.out.print("Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Position coefficient: ");
+        double positionCoefficient = Double.parseDouble(sc.nextLine());
+
+        System.out.print("Responsibilities: ");
+        String responsibilities = sc.nextLine();
+
+        return new Position(responsibilities, name, positionCoefficient);
+    }
 }
