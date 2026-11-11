@@ -68,20 +68,4 @@ public class AdminAccount extends Account {
     public void searchDepartment(Department[] departments) {
         System.out.println("Search departments");
     }
-
-    // public void createAccount(Account[] accounts, String username, String
-    // password, AccountStatus status) {
-    // this.addEmployee(accounts, new EmployeeAccount(username, password, status));
-    // }
-
-    public void resetPassword(Account[] accounts, String username, String password) {
-        for (int i = 0; i < accounts.length; i++) {
-            if (accounts[i] != null && accounts[i].getUsername().equals(username)) {
-                accounts[i].changePassword(password);
-                System.out.println("Da doi mat khau cho: " + username);
-                return;
-            }
-        }
-        System.out.println("Khong tim thay tai khoan: " + username);
-    }
 }

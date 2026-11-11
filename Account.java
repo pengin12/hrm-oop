@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public abstract class Account {
     public enum AccountStatus {
         ACTIVE,
@@ -26,8 +28,23 @@ public abstract class Account {
         System.out.println(this.username + " logout");
     }
 
-    public void changePassword(String password) {
-        this.password = password;
+    public void resetPassword(Scanner sc) {
+        System.out.println("Reset Password");
+        String oldPassword;
+        do {
+            System.out.print("Old password: ");
+            oldPassword = sc.nextLine();
+
+            if (!getPassword().equals(oldPassword)) {
+                System.out.println("Wrong password");
+            }
+        } while (!getPassword().equals(oldPassword));
+
+        System.out.print("New password: ");
+        setPassword(sc.nextLine());
+
+        System.out.print("\033[H\033[2J");
+        System.out.println("Reset password successfully");
     }
 
     public void getInfo() {

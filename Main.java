@@ -824,21 +824,6 @@ public class Main {
     System.out.println("Set successfully");
   }
 
-  private static void setAccountPassword(Scanner sc, Account[] accounts, Account current) {
-    String oldPassword;
-    do {
-      System.out.print("Old password: ");
-      oldPassword = sc.nextLine();
-
-      if (!current.getPassword().equals(oldPassword)) {
-        System.out.print("Wrong password");
-      }
-    } while (!current.getPassword().equals(oldPassword));
-
-    System.out.print("New password: ");
-    current.setPassword(sc.nextLine());
-  }
-
   private static void setAccountStatus(Scanner sc, Account[] accounts, Account current) {
     int statusNum = 0;
     do {
@@ -899,7 +884,7 @@ public class Main {
         case 0:
           return;
         case 1:
-          setAccountPassword(sc, accounts, account);
+          account.resetPassword(sc);
           break;
         case 2:
           account.getInfo();
@@ -967,7 +952,7 @@ public class Main {
         case 0:
           return;
         case 1:
-          setAccountPassword(sc, accounts, account);
+          account.resetPassword(sc);
           break;
         case 2:
           account.getInfo();
