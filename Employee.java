@@ -22,6 +22,24 @@ public class Employee extends Person {
   private Position position;
   private Department department;
 
+  public Employee() {
+    super(null, null, null, null, null, null, null);
+    this.id = null;
+    this.hireDate = null;
+    this.specialization = null;
+    this.status = null;
+    this.evaluations = null;
+    this.contracts = null;
+    this.payrolls = null;
+    this.attendances = null;
+    this.absences = null;
+    this.resignations = null;
+    this.insurances = null;
+    this.taxId = null;
+    this.position = null;
+    this.department = null;
+  }
+
   public Employee(String firstName, String lastName, String email, String phone, LocalDate dateOfBirth, String gender,
       Address address, String id, LocalDate hireDate, String specialization, Employee.EmployeeStatus status,
       Evaluation[] evaluations, Contract[] contracts, Payroll[] payrolls, Attendance[] attendances,

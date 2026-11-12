@@ -21,6 +21,13 @@ public class Contract {
     private ContractType type;
     private ContractStatus status;
 
+    public Contract() {
+        this.startDate = null;
+        this.endDate = null;
+        this.type = null;
+        this.status = null;
+    }
+
     public Contract(LocalDate startDate, LocalDate endDate, ContractType type) {
         this.startDate = startDate;
         this.endDate = endDate;

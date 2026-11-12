@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -12,6 +13,7 @@ public class LimitHandler {
   private int maxContracts;
   private int maxPayrolls;
   private int maxAttendances;
+  private int maxAbsences;
   private int maxInsurances;
   private int maxResignations;
 
@@ -20,22 +22,23 @@ public class LimitHandler {
   private String limitPath = directoryPath + File.separator + "limit.txt";
 
   public LimitHandler readLimit() {
-    LimitHandler limit = new LimitHandler();
-
-    try (Scanner sc = new Scanner(limitPath)) {
-      limit.setMaxAccounts(Integer.parseInt(sc.nextLine()));
-      limit.setMaxEmployees(Integer.parseInt(sc.nextLine()));
-      limit.setMaxDepartments(Integer.parseInt(sc.nextLine()));
-      limit.setMaxPositions(Integer.parseInt(sc.nextLine()));
-      limit.setMaxEvaluations(Integer.parseInt(sc.nextLine()));
-      limit.setMaxContracts(Integer.parseInt(sc.nextLine()));
-      limit.setMaxPayrolls(Integer.parseInt(sc.nextLine()));
-      limit.setMaxAttendances(Integer.parseInt(sc.nextLine()));
-      limit.setMaxInsurances(Integer.parseInt(sc.nextLine()));
-      limit.setMaxResignations(Integer.parseInt(sc.nextLine()));
+    try (Scanner sc = new Scanner(new File(limitPath))) {
+      this.setMaxAccounts(Integer.parseInt(sc.nextLine()));
+      this.setMaxEmployees(Integer.parseInt(sc.nextLine()));
+      this.setMaxDepartments(Integer.parseInt(sc.nextLine()));
+      this.setMaxPositions(Integer.parseInt(sc.nextLine()));
+      this.setMaxEvaluations(Integer.parseInt(sc.nextLine()));
+      this.setMaxContracts(Integer.parseInt(sc.nextLine()));
+      this.setMaxPayrolls(Integer.parseInt(sc.nextLine()));
+      this.setMaxAttendances(Integer.parseInt(sc.nextLine()));
+      this.setMaxAbsences(Integer.parseInt(sc.nextLine()));
+      this.setMaxInsurances(Integer.parseInt(sc.nextLine()));
+      this.setMaxResignations(Integer.parseInt(sc.nextLine()));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
     }
 
-    return limit;
+    return this;
   }
 
   public void writeLimit() {
@@ -50,6 +53,7 @@ public class LimitHandler {
       limitFileWriter.write(maxContracts + "\n");
       limitFileWriter.write(maxPayrolls + "\n");
       limitFileWriter.write(maxAttendances + "\n");
+      limitFileWriter.write(maxAbsences + "\n");
       limitFileWriter.write(maxInsurances + "\n");
       limitFileWriter.write(maxResignations + "\n");
 
@@ -121,6 +125,14 @@ public class LimitHandler {
 
   public void setMaxAttendances(int maxAttendances) {
     this.maxAttendances = maxAttendances;
+  }
+
+  public int getMaxAbsences() {
+    return maxAbsences;
+  }
+
+  public void setMaxAbsences(int maxAbsences) {
+    this.maxAbsences = maxAbsences;
   }
 
   public int getMaxInsurances() {

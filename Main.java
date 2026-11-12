@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -7,14 +6,7 @@ import java.util.Scanner;
 
 public class Main {
   private static LimitHandler limits = new LimitHandler();
-  private static DataHandler data = new DataHandler();
-
-  static {
-    data.setAccounts(new Account[limits.getMaxAccounts()]);
-    data.setEmployees(new Employee[limits.getMaxEmployees()]);
-    data.setDepartments(new Department[limits.getMaxDepartments()]);
-    data.setPositions(new Position[limits.getMaxPositions()]);
-  }
+  private static DataHandler data;
 
   private static int accountsOccupied = -1;
   private static int employeesOccupied = -1;
@@ -26,7 +18,7 @@ public class Main {
 
   private static Address createAddress(Scanner sc) {
     System.out.print("Number: ");
-    int number = Integer.parseInt(sc.nextLine());
+    String number = sc.nextLine();
 
     System.out.print("Street: ");
     String street = sc.nextLine();
@@ -859,10 +851,18 @@ public class Main {
     limits.setMaxDepartments(inputNonNegative(sc, "Max departments"));
     limits.setMaxPositions(inputNonNegative(sc, "Max positions"));
 
-    data.setAccounts(new Account[limits.getMaxAccounts()]);
-    data.setEmployees(new Employee[limits.getMaxEmployees()]);
-    data.setDepartments(new Department[limits.getMaxDepartments()]);
-    data.setPositions(new Position[limits.getMaxPositions()]);
+    data = new DataHandler(
+        limits.getMaxAccounts(),
+        limits.getMaxEmployees(),
+        limits.getMaxDepartments(),
+        limits.getMaxPositions(),
+        limits.getMaxEvaluations(),
+        limits.getMaxContracts(),
+        limits.getMaxPayrolls(),
+        limits.getMaxAttendances(),
+        limits.getMaxAbsences(),
+        limits.getMaxResignations(),
+        limits.getMaxInsurances());
 
     limits.setMaxEvaluations(inputNonNegative(sc, "Max evaluations"));
     limits.setMaxContracts(inputNonNegative(sc, "Max contracts"));
@@ -872,41 +872,6 @@ public class Main {
     limits.setMaxResignations(inputNonNegative(sc, "Max resignations"));
 
     System.out.print("\033[H\033[2J");
-
-    try {
-      String currentDirectory = System.getProperty("user.dir");
-      String directoryPath = currentDirectory + File.separator + "data";
-
-      File directory = new File(directoryPath);
-      if (!directory.exists()) {
-        directory.mkdir();
-      }
-
-      String accountPath = directoryPath + File.separator + "data.getAccounts().txt";
-      String employeePath = directoryPath + File.separator + "employee.txt";
-      String departmentPath = directoryPath + File.separator + "department.txt";
-      String positionPath = directoryPath + File.separator + "position.txt";
-
-      File accountFile = new File(accountPath);
-      File employeeFile = new File(employeePath);
-      File departmentFile = new File(departmentPath);
-      File positionFile = new File(positionPath);
-
-      if (!accountFile.exists()) {
-        accountFile.createNewFile();
-      }
-      if (!employeeFile.exists()) {
-        employeeFile.createNewFile();
-      }
-      if (!departmentFile.exists()) {
-        departmentFile.createNewFile();
-      }
-      if (!positionFile.exists()) {
-        positionFile.createNewFile();
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   private static void createSampleData() {
@@ -956,7 +921,7 @@ public class Main {
     positionsOccupied = 1;
 
     Address address = new Address(
-        25,
+        "25",
         "Nguyen Hue",
         "Ben Nghe",
         "District 1",
@@ -1109,9 +1074,34 @@ public class Main {
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
 
-    setup(sc);
-    data.readData();
+    String currentDirectory = System.getProperty("user.dir");
+    String directoryPath = currentDirectory + File.separator + "data";
+    File directory = new File(directoryPath);
+
+    if (!directory.exists()) {
+      directory.mkdir();
+      setup(sc);
+    } else {
+      limits.readLimit();
+
+      data = new DataHandler(
+          limits.getMaxAccounts(),
+          limits.getMaxEmployees(),
+          limits.getMaxDepartments(),
+          limits.getMaxPositions(),
+          limits.getMaxEvaluations(),
+          limits.getMaxContracts(),
+          limits.getMaxPayrolls(),
+          limits.getMaxAttendances(),
+          limits.getMaxAbsences(),
+          limits.getMaxResignations(),
+          limits.getMaxInsurances());
+
+      data.readData();
+    }
+
     runUI(sc);
+
     limits.writeLimit();
     data.writeData();
 

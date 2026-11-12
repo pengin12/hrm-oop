@@ -13,6 +13,20 @@ public class Payroll {
     private int overtimeHours;
     private LocalDate lastSalaryIncreaseDate;
 
+    public Payroll() {
+        this.month = 0;
+        this.year = 0;
+        this.baseSalary = 0;
+        this.bonus = 0;
+        this.allowance = 0;
+        this.deduction = 0;
+        this.taxAmount = 0;
+        this.insuranceAmount = 0;
+        this.workedHours = 0;
+        this.overtimeHours = 0;
+        this.lastSalaryIncreaseDate = null;
+    }
+
     public Payroll(int month, int year, double baseSalary,
             double bonus, double allowance,
             double deduction, double taxAmount,

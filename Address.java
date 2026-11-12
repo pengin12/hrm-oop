@@ -1,11 +1,19 @@
 public class Address {
-    private int number;
+    private String number;
     private String street;
     private String ward;
     private String district;
     private String city;
 
-    public Address(int number, String street, String ward, String district, String city) {
+    public Address() {
+        this.number = null;
+        this.street = null;
+        this.ward = null;
+        this.district = null;
+        this.city = null;
+    }
+
+    public Address(String number, String street, String ward, String district, String city) {
         this.number = number;
         this.street = street;
         this.ward = ward;
@@ -13,11 +21,11 @@ public class Address {
         this.city = city;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return this.number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 

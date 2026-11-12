@@ -14,6 +14,14 @@ public class Insurance {
     private LocalDate endDate;
     private double rate;
 
+    public Insurance() {
+        this.insuranceNumber = null;
+        this.type = null;
+        this.startDate = null;
+        this.endDate = null;
+        this.rate = 0;
+    }
+
     public Insurance(String insuranceNumber, InsuranceType type, LocalDate startDate, LocalDate endDate, double rate) {
         this.insuranceNumber = insuranceNumber;
         this.type = type;

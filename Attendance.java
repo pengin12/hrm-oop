@@ -8,6 +8,12 @@ public class Attendance {
     private LocalTime clockIn;
     private LocalTime clockOut;
 
+    public Attendance() {
+        this.date = null;
+        this.clockIn = null;
+        this.clockIn = null;
+    }
+
     public Attendance(LocalDate date, LocalTime clockIn, LocalTime clockOut) {
         this.date = date;
         this.clockIn = clockIn;

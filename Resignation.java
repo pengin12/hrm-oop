@@ -11,6 +11,12 @@ public class Resignation {
     private LocalDate date;
     private ResignationStatus status;
 
+    public Resignation() {
+        this.reason = null;
+        this.date = null;
+        this.status = null;
+    }
+
     public Resignation(String reason, LocalDate date) {
         this.reason = reason;
         this.date = date;

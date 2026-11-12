@@ -9,6 +9,16 @@ public abstract class Person {
     private String gender;
     private Address address;
 
+    public Person() {
+        firstName = null;
+        lastName = null;
+        email = null;
+        phone = null;
+        dateOfBirth = null;
+        gender = null;
+        address = null;
+    }
+
     public Person(String firstName, String lastName, String email, String phone,
             LocalDate dateOfBirth, String gender, Address address) {
         this.firstName = firstName;

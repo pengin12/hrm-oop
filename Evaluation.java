@@ -8,6 +8,17 @@ public class Evaluation {
     private double productivity;
     private double teamWork;
 
+    public Evaluation() {
+        this.month = null;
+        this.comment = null;
+        this.workScore = 0;
+        this.attitudeScore = 0;
+        this.disciplineScore = 0;
+        this.workQuality = 0;
+        this.productivity = 0;
+        this.teamWork = 0;
+    }
+
     public Evaluation(String month, String comment,
             double workScore,
             double attitudeScore,

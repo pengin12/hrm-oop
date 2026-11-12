@@ -12,6 +12,13 @@ public class Absence {
     private LocalDate toDate;
     private AbsenceStatus status;
 
+    public Absence() {
+        this.reason = "";
+        this.fromDate = null;
+        this.toDate = null;
+        this.status = null;
+    }
+
     public Absence(String reason, LocalDate fromDate, LocalDate toDate) {
         this.reason = reason;
         this.fromDate = fromDate;

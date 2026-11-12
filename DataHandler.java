@@ -1,9 +1,24 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Scanner;
 
 public class DataHandler {
+  private int maxAccounts;
+  private int maxEmployees;
+  private int maxDepartments;
+  private int maxPositions;
+  private int maxEvaluations;
+  private int maxContracts;
+  private int maxPayrolls;
+  private int maxAttendances;
+  private int maxAbsences;
+  private int maxInsurances;
+  private int maxResignations;
+
   private Account[] accounts;
   private Employee[] employees;
   private Department[] departments;
@@ -13,21 +28,295 @@ public class DataHandler {
   private String directoryPath = currentDirectory + File.separator + "data";
 
   private String accountPath = directoryPath + File.separator + "accounts.txt";
-  private String employeePath = directoryPath + File.separator + "employee.txt";
-  private String departmentPath = directoryPath + File.separator + "department.txt";
-  private String positionPath = directoryPath + File.separator + "position.txt";
+  private String employeePath = directoryPath + File.separator + "employees.txt";
+  private String departmentPath = directoryPath + File.separator + "departments.txt";
+  private String positionPath = directoryPath + File.separator + "positions.txt";
+
+  public DataHandler(
+      int maxAccounts,
+      int maxEmployees,
+      int maxDepartments,
+      int maxPositions,
+      int maxEvaluations,
+      int maxContracts,
+      int maxPayrolls,
+      int maxAttendances,
+      int maxAbsences,
+      int maxInsurances,
+      int maxResignations) {
+    this.accounts = new Account[maxAccounts];
+    this.employees = new Employee[maxEmployees];
+    this.departments = new Department[maxDepartments];
+    this.positions = new Position[maxPositions];
+
+    this.maxEvaluations = maxEvaluations;
+    this.maxContracts = maxContracts;
+    this.maxPayrolls = maxPayrolls;
+    this.maxAttendances = maxAttendances;
+    this.maxAbsences = maxAbsences;
+    this.maxResignations = maxResignations;
+    this.maxInsurances = maxInsurances;
+  }
 
   private Account[] readAccountsData() {
-    try (Scanner sc = new Scanner(accountPath)) {
+    try (Scanner sc = new Scanner(new File(accountPath))) {
+      int i = 0;
+      while (sc.hasNextLine() && i < accounts.length) {
+        String type = sc.nextLine();
+        String username = sc.nextLine();
+        String password = sc.nextLine();
+        Account.AccountStatus status = Account.AccountStatus.valueOf(sc.nextLine());
 
+        if (type.equals("admin")) {
+          this.accounts[i] = new AdminAccount(username, password, status);
+        } else {
+          this.accounts[i] = new EmployeeAccount(username, password, status);
+        }
+
+        i++;
+        sc.nextLine();
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
     }
 
+    return this.accounts;
+  }
+
+  private Employee[] readEmployeesData() {
+    try (Scanner sc = new Scanner(new File(employeePath))) {
+      int i = 0;
+      while (sc.hasNextLine() && i < employees.length) {
+        this.employees[i] = new Employee();
+        Employee thisEmployee = this.employees[i];
+
+        thisEmployee.setEvaluations(new Evaluation[maxEvaluations]);
+        thisEmployee.setContracts(new Contract[maxContracts]);
+        thisEmployee.setPayrolls(new Payroll[maxPayrolls]);
+        thisEmployee.setAttendances(new Attendance[maxAttendances]);
+        thisEmployee.setAbsences(new Absence[maxAbsences]);
+        thisEmployee.setResignations(new Resignation[maxResignations]);
+        thisEmployee.setInsurances(new Insurance[maxInsurances]);
+
+        int idx = 0;
+
+        thisEmployee.setFirstName(sc.nextLine());
+        thisEmployee.setLastName(sc.nextLine());
+        thisEmployee.setEmail(sc.nextLine());
+        thisEmployee.setPhone(sc.nextLine());
+        thisEmployee.setDateOfBirth(LocalDate.parse(sc.nextLine()));
+        thisEmployee.setGender(sc.nextLine());
+
+        sc.nextLine();
+        thisEmployee.setAddress(new Address());
+        Address thisAddress = thisEmployee.getAddress();
+        thisAddress.setNumber(sc.nextLine());
+        thisAddress.setStreet(sc.nextLine());
+        thisAddress.setWard(sc.nextLine());
+        thisAddress.setDistrict(sc.nextLine());
+        thisAddress.setCity(sc.nextLine());
+        sc.nextLine();
+
+        thisEmployee.setId(sc.nextLine());
+        thisEmployee.setHireDate(LocalDate.parse(sc.nextLine()));
+        thisEmployee.setSpecialization(sc.nextLine());
+        thisEmployee.setStatus(Employee.EmployeeStatus.valueOf(sc.nextLine()));
+
+        sc.nextLine();
+        sc.nextLine();
+        String tmp = sc.nextLine();
+        Evaluation[] thisEvaluations = thisEmployee.getEvaluations();
+        while (!tmp.equals("}")) {
+          thisEvaluations[idx] = new Evaluation();
+          thisEvaluations[idx].setMonth(tmp);
+          thisEvaluations[idx].setComment(sc.nextLine());
+          thisEvaluations[idx].setWorkScore(Double.parseDouble(sc.nextLine()));
+          thisEvaluations[idx].setAttitudeScore(Double.parseDouble(sc.nextLine()));
+          thisEvaluations[idx].setDisciplineScore(Double.parseDouble(sc.nextLine()));
+          thisEvaluations[idx].setWorkQuality(Double.parseDouble(sc.nextLine()));
+          thisEvaluations[idx].setProductivity(Double.parseDouble(sc.nextLine()));
+          thisEvaluations[idx].setTeamWork(Double.parseDouble(sc.nextLine()));
+
+          idx++;
+          sc.nextLine();
+
+          tmp = sc.nextLine();
+        }
+        idx = 0;
+
+        sc.nextLine();
+        sc.nextLine();
+        tmp = sc.nextLine();
+        Contract[] thisContracts = thisEmployee.getContracts();
+        while (!tmp.equals("}")) {
+          thisContracts[idx] = new Contract();
+          thisContracts[idx].setStartDate(LocalDate.parse(tmp));
+          thisContracts[idx].setEndDate(LocalDate.parse(sc.nextLine()));
+          thisContracts[idx].setType(Contract.ContractType.valueOf(sc.nextLine()));
+          thisContracts[idx].setStatus(Contract.ContractStatus.valueOf(sc.nextLine()));
+
+          sc.nextLine();
+          idx++;
+
+          tmp = sc.nextLine();
+        }
+        idx = 0;
+
+        sc.nextLine();
+        sc.nextLine();
+        tmp = sc.nextLine();
+        Payroll[] thisPayrolls = thisEmployee.getPayrolls();
+        while (!tmp.equals("}")) {
+          thisPayrolls[idx] = new Payroll();
+          thisPayrolls[idx].setMonth(Integer.parseInt(tmp));
+          thisPayrolls[idx].setYear(Integer.parseInt(sc.nextLine()));
+          thisPayrolls[idx].setBaseSalary(Double.parseDouble(sc.nextLine()));
+          thisPayrolls[idx].setBonus(Double.parseDouble(sc.nextLine()));
+          thisPayrolls[idx].setAllowance(Double.parseDouble(sc.nextLine()));
+          thisPayrolls[idx].setDeduction(Double.parseDouble(sc.nextLine()));
+          thisPayrolls[idx].setTaxAmount(Double.parseDouble(sc.nextLine()));
+          thisPayrolls[idx].setInsuranceAmount(Double.parseDouble(sc.nextLine()));
+          thisPayrolls[idx].setWorkedHours(Integer.parseInt(sc.nextLine()));
+          thisPayrolls[idx].setOvertimeHours(Integer.parseInt(sc.nextLine()));
+          thisPayrolls[idx].setLastSalaryIncreaseDate(LocalDate.parse(sc.nextLine()));
+
+          sc.nextLine();
+          idx++;
+
+          tmp = sc.nextLine();
+        }
+        idx = 0;
+
+        sc.nextLine();
+        sc.nextLine();
+        tmp = sc.nextLine();
+        Attendance[] thisAttendances = thisEmployee.getAttendances();
+        while (!tmp.equals("}")) {
+          thisAttendances[idx] = new Attendance();
+          thisAttendances[idx].setDate(LocalDate.parse(tmp));
+          thisAttendances[idx].setClockIn(LocalTime.parse(sc.nextLine()));
+          thisAttendances[idx].setClockOut(LocalTime.parse(sc.nextLine()));
+
+          sc.nextLine();
+          idx++;
+
+          tmp = sc.nextLine();
+        }
+        idx = 0;
+
+        sc.nextLine();
+        sc.nextLine();
+        tmp = sc.nextLine();
+        Absence[] thisAbsences = thisEmployee.getAbsences();
+        while (!tmp.equals("}")) {
+          thisAbsences[idx] = new Absence();
+          thisAbsences[idx].setReason(tmp);
+          thisAbsences[idx].setFromDate(LocalDate.parse(sc.nextLine()));
+          thisAbsences[idx].setToDate(LocalDate.parse(sc.nextLine()));
+          thisAbsences[idx].setStatus(Absence.AbsenceStatus.valueOf(sc.nextLine()));
+
+          sc.nextLine();
+          idx++;
+
+          tmp = sc.nextLine();
+        }
+        idx = 0;
+
+        sc.nextLine();
+        sc.nextLine();
+        tmp = sc.nextLine();
+        Resignation[] thisResignations = thisEmployee.getResignations();
+        while (!tmp.equals("}")) {
+          thisResignations[idx] = new Resignation();
+          thisResignations[idx].setReason(tmp);
+          thisResignations[idx].setDate(LocalDate.parse(sc.nextLine()));
+          thisResignations[idx].setStatus(Resignation.ResignationStatus.valueOf(sc.nextLine()));
+
+          sc.nextLine();
+          idx++;
+
+          tmp = sc.nextLine();
+        }
+        idx = 0;
+
+        sc.nextLine();
+        sc.nextLine();
+        tmp = sc.nextLine();
+        Insurance[] thisInsurances = thisEmployee.getInsurances();
+        while (!tmp.equals("}")) {
+          thisInsurances[idx] = new Insurance();
+          thisInsurances[idx].setInsuranceNumber(tmp);
+          thisInsurances[idx].setType(Insurance.InsuranceType.valueOf(sc.nextLine()));
+          thisInsurances[idx].setStartDate(LocalDate.parse(sc.nextLine()));
+          thisInsurances[idx].setEndDate(LocalDate.parse(sc.nextLine()));
+          thisInsurances[idx].setRate(Double.parseDouble(sc.nextLine()));
+
+          sc.nextLine();
+          idx++;
+
+          tmp = sc.nextLine();
+        }
+        idx = 0;
+
+        thisEmployee.setTaxId(sc.nextLine());
+
+        thisEmployee.setPosition(positions[Integer.parseInt(sc.nextLine())]);
+        thisEmployee.setDepartment(departments[Integer.parseInt(sc.nextLine())]);
+
+        i++;
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    return this.employees;
+  }
+
+  private Department[] readDepartmentsData() {
+    int idx = 0;
+    try (Scanner sc = new Scanner(new File(departmentPath))) {
+      while (sc.hasNextLine() && idx < departments.length) {
+        departments[idx] = new Department();
+        Department thisDepartment = departments[idx];
+        thisDepartment.setName(sc.nextLine());
+        thisDepartment.setPhone(sc.nextLine());
+        thisDepartment.setPosition(sc.nextLine());
+        sc.nextLine();
+
+        idx++;
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    return this.departments;
+  }
+
+  private Position[] readPositionsData() {
+    int idx = 0;
+    try (Scanner sc = new Scanner(new File(positionPath))) {
+      while (sc.hasNextLine() && idx < positions.length) {
+        positions[idx] = new Position();
+        Position thisPosition = positions[idx];
+        thisPosition.setName(sc.nextLine());
+        thisPosition.setPositionCoefficient(Double.parseDouble(sc.nextLine()));
+        thisPosition.setResponsibilities(sc.nextLine());
+        sc.nextLine();
+        idx++;
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    return this.positions;
   }
 
   public DataHandler readData() {
-    DataHandler data = new DataHandler();
-
-    return data;
+    readDepartmentsData();
+    readPositionsData();
+    readEmployeesData();
+    readAccountsData();
+    return this;
   }
 
   private String writeAccountData(Account[] accounts) {
@@ -96,7 +385,6 @@ public class DataHandler {
 
           data += "{\n";
 
-          data += currentEvaluation.getMonth() + "\n";
           data += currentEvaluation.getMonth() + "\n";
           data += currentEvaluation.getComment() + "\n";
           data += currentEvaluation.getWorkScore() + "\n";
@@ -257,8 +545,30 @@ public class DataHandler {
 
       data += currentEmployee.getTaxId() + "\n";
 
-      data += currentEmployee.getPosition() + "\n";
-      data += currentEmployee.getDepartment() + "\n";
+      for (int j = 0; j < positions.length; j++) {
+        if (positions[i] == null) {
+          data += "-1";
+        }
+
+        if (currentEmployee.getPosition().getName().equals(positions[i].getName())) {
+          data += i;
+          break;
+        }
+      }
+
+      data += "\n";
+
+      for (int j = 0; j < departments.length; j++) {
+        if (departments[i] == null) {
+          data += "-1";
+        }
+
+        if (currentEmployee.getDepartment().getName().equals(departments[i].getName())) {
+          data += i;
+          break;
+        }
+      }
+
       data += "\n";
     }
 
