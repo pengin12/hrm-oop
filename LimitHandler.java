@@ -63,6 +63,22 @@ public class LimitHandler {
     }
   }
 
+  public void writeSampleLimit() {
+    try {
+      FileWriter limitFileWriter = new FileWriter(limitPath);
+
+      String data = "";
+      String[] samples = { "250", "200", "50", "100", "5000", "5000", "5000", "5000", "5000", "5000", "5000" };
+      data += String.join("\n", samples) + "\n";
+
+      limitFileWriter.write(data);
+
+      limitFileWriter.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   public int getMaxAccounts() {
     return maxAccounts;
   }

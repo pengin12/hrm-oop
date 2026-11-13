@@ -846,170 +846,75 @@ public class Main {
   private static void setup(Scanner sc) {
     System.out.println("Setup system");
 
-    limits.setMaxAccounts(inputNonNegative(sc, "Max accounts"));
-    limits.setMaxEmployees(inputNonNegative(sc, "Max employees"));
-    limits.setMaxDepartments(inputNonNegative(sc, "Max departments"));
-    limits.setMaxPositions(inputNonNegative(sc, "Max positions"));
+    int choice;
+    do {
+      System.out.println("[0] Exit");
+      System.out.println("[1] Manually");
+      System.out.println("[2] Load sample data");
+      System.out.print("Choice: ");
+      choice = Integer.parseInt(sc.nextLine());
 
-    data = new DataHandler(
-        limits.getMaxAccounts(),
-        limits.getMaxEmployees(),
-        limits.getMaxDepartments(),
-        limits.getMaxPositions(),
-        limits.getMaxEvaluations(),
-        limits.getMaxContracts(),
-        limits.getMaxPayrolls(),
-        limits.getMaxAttendances(),
-        limits.getMaxAbsences(),
-        limits.getMaxResignations(),
-        limits.getMaxInsurances());
+      if (choice < 0 || 2 < choice) {
+        System.out.print("\033[H\033[2J");
+        System.out.println("Invalid choice");
+      }
+    } while (choice < 0 || 2 < choice);
 
-    limits.setMaxEvaluations(inputNonNegative(sc, "Max evaluations"));
-    limits.setMaxContracts(inputNonNegative(sc, "Max contracts"));
-    limits.setMaxPayrolls(inputNonNegative(sc, "Max payrolls"));
-    limits.setMaxAttendances(inputNonNegative(sc, "Max attendances"));
-    limits.setMaxInsurances(inputNonNegative(sc, "Max insurances"));
-    limits.setMaxResignations(inputNonNegative(sc, "Max resignations"));
+    switch (choice) {
+      case 0:
+        return;
+      case 1:
+        limits.setMaxAccounts(inputNonNegative(sc, "Max accounts"));
+        limits.setMaxEmployees(inputNonNegative(sc, "Max employees"));
+        limits.setMaxDepartments(inputNonNegative(sc, "Max departments"));
+        limits.setMaxPositions(inputNonNegative(sc, "Max positions"));
 
-    System.out.print("\033[H\033[2J");
-  }
+        data = new DataHandler(
+            limits.getMaxAccounts(),
+            limits.getMaxEmployees(),
+            limits.getMaxDepartments(),
+            limits.getMaxPositions(),
+            limits.getMaxEvaluations(),
+            limits.getMaxContracts(),
+            limits.getMaxPayrolls(),
+            limits.getMaxAttendances(),
+            limits.getMaxAbsences(),
+            limits.getMaxResignations(),
+            limits.getMaxInsurances());
 
-  private static void createSampleData() {
-    if (limits.getMaxAccounts() < 2 || limits.getMaxEmployees() < 1 ||
-        limits.getMaxDepartments() < 2 || limits.getMaxPositions() < 2 ||
-        limits.getMaxEvaluations() < 1 || limits.getMaxContracts() < 1 ||
-        limits.getMaxPayrolls() < 1 || limits.getMaxAttendances() < 1 ||
-        limits.getMaxInsurances() < 1) {
-      throw new IllegalStateException(
-          "Not enough capacity. Increase the maximum values in setup().");
+        limits.setMaxEvaluations(inputNonNegative(sc, "Max evaluations"));
+        limits.setMaxContracts(inputNonNegative(sc, "Max contracts"));
+        limits.setMaxPayrolls(inputNonNegative(sc, "Max payrolls"));
+        limits.setMaxAttendances(inputNonNegative(sc, "Max attendances"));
+        limits.setMaxInsurances(inputNonNegative(sc, "Max insurances"));
+        limits.setMaxResignations(inputNonNegative(sc, "Max resignations"));
+        break;
+      case 2:
+        limits.writeSampleLimit();
+        limits.readLimit();
+
+        data = new DataHandler(
+            limits.getMaxAccounts(),
+            limits.getMaxEmployees(),
+            limits.getMaxDepartments(),
+            limits.getMaxPositions(),
+            limits.getMaxEvaluations(),
+            limits.getMaxContracts(),
+            limits.getMaxPayrolls(),
+            limits.getMaxAttendances(),
+            limits.getMaxAbsences(),
+            limits.getMaxResignations(),
+            limits.getMaxInsurances());
+
+        data.writeSampleData();
+        data.readData();
+        break;
+
+      default:
+        break;
     }
 
-    data.getAccounts()[0] = new AdminAccount(
-        "admin",
-        "admin123",
-        Account.AccountStatus.ACTIVE);
-
-    data.getAccounts()[1] = new EmployeeAccount(
-        "john",
-        "john123",
-        Account.AccountStatus.ACTIVE);
-
-    accountsOccupied = 1;
-
-    data.getDepartments()[0] = new Department(
-        "IT",
-        "0901234567",
-        "Software Development");
-
-    data.getDepartments()[1] = new Department(
-        "Human Resources",
-        "0907654321",
-        "Recruitment");
-
-    departmentsOccupied = 1;
-
-    data.getPositions()[0] = new Position(
-        "Develop and maintain software",
-        "Software Developer",
-        2.5);
-
-    data.getPositions()[1] = new Position(
-        "Manage recruitment and employee relations",
-        "HR Manager",
-        3.0);
-
-    positionsOccupied = 1;
-
-    Address address = new Address(
-        "25",
-        "Nguyen Hue",
-        "Ben Nghe",
-        "District 1",
-        "Ho Chi Minh City");
-
-    Evaluation[] evaluations = new Evaluation[limits.getMaxEvaluations()];
-
-    evaluations[0] = new Evaluation(
-        "October 2026",
-        "Excellent performance",
-        9.0,
-        9.5,
-        9.0,
-        9.0,
-        8.5,
-        9.0);
-
-    Contract[] contracts = new Contract[limits.getMaxContracts()];
-
-    contracts[0] = new Contract(
-        LocalDate.of(2025, 1, 1),
-        LocalDate.of(2027, 12, 31),
-        Contract.ContractType.FULL_TIME,
-        Contract.ContractStatus.ACTIVE);
-
-    Payroll[] payrolls = new Payroll[limits.getMaxPayrolls()];
-
-    payrolls[0] = new Payroll(
-        10,
-        2026,
-        20000000,
-        2000000,
-        1000000,
-        500000,
-        1500000,
-        1000000,
-        176,
-        10,
-        LocalDate.of(2026, 1, 1));
-
-    Attendance[] attendances = new Attendance[limits.getMaxAttendances()];
-
-    attendances[0] = new Attendance(
-        LocalDate.of(2026, 10, 5),
-        LocalTime.of(8, 0),
-        LocalTime.of(17, 0));
-
-    Resignation[] resignations = new Resignation[limits.getMaxInsurances()];
-
-    resignations[0] = new Resignation(
-        "",
-        LocalDate.of(2012, 1, 13),
-        Resignation.ResignationStatus.REJECTED);
-
-    Insurance[] insurances = new Insurance[limits.getMaxInsurances()];
-
-    insurances[0] = new Insurance(
-        "INS001",
-        Insurance.InsuranceType.HEALTH,
-        LocalDate.of(2025, 1, 1),
-        LocalDate.of(2027, 12, 31),
-        0.08);
-
-    data.getEmployees()[0] = new Employee(
-        "John",
-        "Smith",
-        "john.smith@example.com",
-        "0912345678",
-        LocalDate.of(1998, 6, 15),
-        "Male",
-        address,
-        "EMP001",
-        LocalDate.of(2025, 1, 1),
-        "Backend Development",
-        Employee.EmployeeStatus.WORKING,
-        evaluations,
-        contracts,
-        payrolls,
-        attendances,
-        resignations,
-        "TAX001",
-        insurances,
-        data.getPositions()[0],
-        data.getDepartments()[0]);
-
-    employeesOccupied = 0;
-
-    System.out.println("Sample data created successfully!");
+    System.out.print("\033[H\033[2J");
   }
 
   private static void runUI(Scanner sc) {
@@ -1018,7 +923,6 @@ public class Main {
       System.out.println("[0] Exit");
       System.out.println("[1] Create admin account");
       System.out.println("[2] Login");
-      System.out.println("[3] Create sample data");
       System.out.print("Choice: ");
       choice = Integer.parseInt(sc.nextLine());
 
@@ -1060,9 +964,6 @@ public class Main {
               runAdminUI((AdminAccount) data.getAccounts()[index], sc);
             }
           }
-          break;
-        case 3:
-          createSampleData();
           break;
 
         default:
