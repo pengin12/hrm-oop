@@ -1,3 +1,5 @@
+import java.io.DataInput;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class ConsoleUI {
@@ -237,4 +239,22 @@ public class ConsoleUI {
 
     sc.nextLine();
   }
+
+  public LocalDate printDate(String title, String subtitle, String[] options, String input, Scanner sc) {
+    printHeader(subtitle);
+    if (!subtitle.isEmpty()) {
+      System.out.println("║" + " ".repeat(CONTENT_WIDTH) + "║");
+      printSubtitle(subtitle);
+    }
+    if (options.length != 0) {
+      System.out.println("║" + " ".repeat(CONTENT_WIDTH) + "║");
+      for (int i = 0; i < options.length; i++) {
+        printContent("[" + i + "] " + options[i]);
+      }
+      System.out.println("║" + " ".repeat(CONTENT_WIDTH) + "║");
+      System.out.println("╚" + "═".repeat(CONTENT_WIDTH) + "╝");
+    }
+    return Dateinput.inputDate(sc);
+  }
+
 }

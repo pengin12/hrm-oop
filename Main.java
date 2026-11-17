@@ -93,10 +93,10 @@ public class Main {
     LocalDate endDate;
     do {
       input = "Start date: ";
-      startDate = LocalDate.parse(console.printUI(title, subtitle, options, input, sc), dateFormatter);
+      startDate = console.printDate(title, subtitle, options, input, sc);
 
       input = "End date: ";
-      endDate = LocalDate.parse(console.printUI(title, subtitle, options, input, sc), dateFormatter);
+      endDate = console.printDate(title, subtitle, options, input, sc);
 
       if (startDate.isAfter(endDate)) {
         System.out.println("Start date should be before end date");
@@ -204,8 +204,7 @@ public class Main {
     int overtimeHours = validateInt(console.printUI(title, subtitle, options, input, sc));
 
     input = "Last salary increase (dd/MM/yyyy): ";
-    LocalDate lastSalaryIncreaseDate = LocalDate.parse(console.printUI(title, subtitle, options, input, sc),
-        dateFormatter);
+    LocalDate lastSalaryIncreaseDate = console.printDate(title, subtitle, options, input, sc);
 
     return new Payroll(month, year, baseSalary, bonus, allowance, deduction, taxAmount, insuranceAmount, workedHours,
         overtimeHours, lastSalaryIncreaseDate);
@@ -218,7 +217,7 @@ public class Main {
     String input;
 
     input = "Date (dd/MM/yyyy): ";
-    LocalDate date = LocalDate.parse(console.printUI(title, subtitle, options, input, sc), dateFormatter);
+    LocalDate date = console.printDate(title, subtitle, options, input, sc);
 
     LocalTime clockIn;
     LocalTime clockOut;
@@ -275,10 +274,10 @@ public class Main {
     LocalDate endDate;
     do {
       input = "Start date (dd/MM/yyyy): ";
-      startDate = LocalDate.parse(console.printUI(title, subtitle, options, input, sc), dateFormatter);
+      startDate = console.printDate(title, subtitle, options, input, sc);
 
       input = "End date (dd/MM/yyyy): ";
-      endDate = LocalDate.parse(console.printUI(title, subtitle, options, input, sc), dateFormatter);
+      endDate = console.printDate(title, subtitle, options, input, sc);
 
       if (startDate.isAfter(endDate)) {
         console.printResult(title, "Start date should be before end date", sc);
@@ -462,7 +461,7 @@ public class Main {
     String reason = sc.nextLine();
 
     input = "Date (dd/MM/yyyy): ";
-    LocalDate date = LocalDate.parse(sc.nextLine(), dateFormatter);
+    LocalDate date = console.printDate(title, subtitle, options, input, sc);
 
     int statusNum;
     do {
@@ -642,7 +641,7 @@ public class Main {
     String phone = console.printUI(title, subtitle, options, input, sc);
 
     input = "Date of birth (dd/MM/yyyy)";
-    LocalDate dateOfBirth = LocalDate.parse(console.printUI(title, subtitle, options, input, sc), dateFormatter);
+    LocalDate dateOfBirth = console.printDate(title, subtitle, options, input, sc);
 
     input = "Gender";
     String gender = console.printUI(title, subtitle, options, input, sc);
@@ -654,7 +653,8 @@ public class Main {
     String id = console.printUI(title, subtitle, options, input, sc);
 
     input = "Hire date (dd/MM/yyyy)";
-    LocalDate hireDate = LocalDate.parse(console.printUI(title, subtitle, options, input, sc), dateFormatter);
+    LocalDate hireDate = console.printDate(title, subtitle, options, input, sc);
+    ;
 
     input = "Specialization";
     String specialization = console.printUI(title, subtitle, options, input, sc);
@@ -1099,7 +1099,6 @@ public class Main {
     }
 
     runUI(sc);
-
     limits.writeLimit();
     data.writeData();
 

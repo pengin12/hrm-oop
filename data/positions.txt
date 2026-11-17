@@ -1,0 +1,20 @@
+Manager
+3.0
+Department management
+
+Team Leader
+2.5
+Team supervision and coordination
+
+Senior Developer
+2.0
+Senior software development
+
+Junior Developer
+1.5
+Junior software development
+
+HR Specialist
+1.8
+Human resources management
+
