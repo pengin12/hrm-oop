@@ -1,10 +1,10 @@
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-public class Datacheck {
+public class DataCheck {
     private Pattern pattern;
 
-    public Datacheck(String regex) {
+    public DataCheck(String regex) {
         pattern = Pattern.compile(regex);
     }
 

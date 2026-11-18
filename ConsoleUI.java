@@ -240,21 +240,19 @@ public class ConsoleUI {
     sc.nextLine();
   }
 
-  public LocalDate printDate(String title, String subtitle, String[] options, String input, Scanner sc) {
-    printHeader(subtitle);
-    if (!subtitle.isEmpty()) {
-      System.out.println("║" + " ".repeat(CONTENT_WIDTH) + "║");
-      printSubtitle(subtitle);
-    }
-    if (options.length != 0) {
-      System.out.println("║" + " ".repeat(CONTENT_WIDTH) + "║");
-      for (int i = 0; i < options.length; i++) {
-        printContent("[" + i + "] " + options[i]);
+  public LocalDate printDateUI(String title, String subtitle, String[] options, String input, Scanner sc) {
+    DataCheck checker = new DataCheck("^(\\d{2})/(\\d{2})/(\\d{4})$");
+    while (true) {
+      String date = printUI(title, subtitle, options, input, sc);
+      if (checker.check(date)) {
+        int day = Integer.parseInt(date.substring(0, 2));
+        int month = Integer.parseInt(date.substring(3, 5));
+        int year = Integer.parseInt(date.substring(6, 10));
+        return LocalDate.of(year, month, day);
+      } else {
+        printResult(title, "Invalid date! Please enter again.", sc);
       }
-      System.out.println("║" + " ".repeat(CONTENT_WIDTH) + "║");
-      System.out.println("╚" + "═".repeat(CONTENT_WIDTH) + "╝");
-    }
-    return Dateinput.inputDate(sc);
-  }
 
+    }
+  }
 }
