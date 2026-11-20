@@ -34,6 +34,119 @@ public class SortData {
     return ascending ? (cmp > 0) : (cmp < 0);
   }
 
+  public void sortById(Employee[] employees, boolean ascending) {
+    if (employees == null)
+      return;
+
+    int n = compactNulls(employees);
+    for (int i = 0; i < n - 1; i++) {
+      for (int j = 0; j < n - i - 1; j++) {
+        if (shouldSwap(employees[j].getId(), employees[j + 1].getId(), ascending)) {
+          Employee tmp = employees[j];
+          employees[j] = employees[j + 1];
+          employees[j + 1] = tmp;
+        }
+      }
+    }
+  }
+
+  public void sortByHireDate(Employee[] employees, boolean ascending) {
+    if (employees == null)
+      return;
+
+    int n = compactNulls(employees);
+    for (int i = 0; i < n - 1; i++) {
+      for (int j = 0; j < n - i - 1; j++) {
+        if (shouldSwap(employees[j].getHireDate(), employees[j + 1].getHireDate(), ascending)) {
+          Employee tmp = employees[j];
+          employees[j] = employees[j + 1];
+          employees[j + 1] = tmp;
+        }
+      }
+    }
+  }
+
+  public void sortBySpecialization(Employee[] employees, boolean ascending) {
+    if (employees == null)
+      return;
+
+    int n = compactNulls(employees);
+    for (int i = 0; i < n - 1; i++) {
+      for (int j = 0; j < n - i - 1; j++) {
+        if (shouldSwap(employees[j].getSpecialization(), employees[j + 1].getSpecialization(), ascending)) {
+          Employee tmp = employees[j];
+          employees[j] = employees[j + 1];
+          employees[j + 1] = tmp;
+        }
+      }
+    }
+  }
+
+  public void sortByStatus(Employee[] employees, boolean ascending) {
+    if (employees == null)
+      return;
+
+    int n = compactNulls(employees);
+    for (int i = 0; i < n - 1; i++) {
+      for (int j = 0; j < n - i - 1; j++) {
+        if (shouldSwap(String.valueOf(employees[j].getStatus()), String.valueOf(employees[j + 1].getStatus()),
+            ascending)) {
+          Employee tmp = employees[j];
+          employees[j] = employees[j + 1];
+          employees[j + 1] = tmp;
+        }
+      }
+    }
+  }
+
+  public void sortByTaxId(Employee[] employees, boolean ascending) {
+    if (employees == null)
+      return;
+
+    int n = compactNulls(employees);
+    for (int i = 0; i < n - 1; i++) {
+      for (int j = 0; j < n - i - 1; j++) {
+        if (shouldSwap(employees[j].getTaxId(), employees[j + 1].getTaxId(), ascending)) {
+          Employee tmp = employees[j];
+          employees[j] = employees[j + 1];
+          employees[j + 1] = tmp;
+        }
+      }
+    }
+  }
+
+  public void sortByPosition(Employee[] employees, boolean ascending) {
+    if (employees == null)
+      return;
+
+    int n = compactNulls(employees);
+    for (int i = 0; i < n - 1; i++) {
+      for (int j = 0; j < n - i - 1; j++) {
+        if (shouldSwap(employees[j].getPosition().getName(), employees[j + 1].getPosition().getName(), ascending)) {
+          Employee tmp = employees[j];
+          employees[j] = employees[j + 1];
+          employees[j + 1] = tmp;
+        }
+      }
+    }
+  }
+
+  public void sortByDepartment(Employee[] employees, boolean ascending) {
+    if (employees == null)
+      return;
+
+    int n = compactNulls(employees);
+    for (int i = 0; i < n - 1; i++) {
+      for (int j = 0; j < n - i - 1; j++) {
+        if (shouldSwap(employees[j].getDepartment().getName(), employees[j + 1].getDepartment().getName(), ascending)) {
+          Employee tmp = employees[j];
+          employees[j] = employees[j + 1];
+          employees[j + 1] = tmp;
+        }
+      }
+    }
+  }
+
   public void sortByMonth(Payroll[] payrolls, boolean ascending) {
     if (payrolls == null)
       return;

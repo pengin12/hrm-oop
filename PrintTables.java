@@ -8,6 +8,26 @@ public class PrintTables {
     return String.format("%-" + width + "s", text);
   }
 
+  private static String center(String value, int width) {
+    if (value.length() > width) {
+      return fit(value, width);
+    }
+
+    int leftPad = (width - value.length()) / 2;
+    int rightPad = width - value.length() - leftPad;
+
+    return String.format("%s%s%s", " ".repeat(leftPad), value, " ".repeat(rightPad));
+  }
+
+  private static void appendHeader(StringBuilder out, int[] widths, String... values) {
+    out.append("|");
+    for (int i = 0; i < widths.length; i++) {
+      String value = i < values.length ? values[i] : "";
+      out.append(" ").append(center(value, widths[i])).append(" |");
+    }
+    out.append('\n');
+  }
+
   private static void appendRow(StringBuilder out, int[] widths, String... values) {
     out.append("|");
     for (int i = 0; i < widths.length; i++) {
@@ -18,15 +38,93 @@ public class PrintTables {
   }
 
   private static void appendSeparator(StringBuilder out, int[] widths) {
-    out.append("+");
-    for (int width : widths)
-      out.append("-".repeat(width + 2)).append("+");
-    out.append('\n');
+    out.append("|");
+    for (int width : widths) {
+      out.append(" ");
+      out.append("-".repeat(width)).append(" |");
+    }
+    out.append("\n");
   }
 
   private static void show(String title, String content, Scanner sc) {
     ConsoleUI console = new ConsoleUI();
     console.printResult(title, content, sc);
+  }
+
+  public static void printEmployees(Employee[] employees, Scanner sc) {
+    StringBuilder content = new StringBuilder();
+    if (employees == null) {
+      content.append("Employees list not found: ").append(sc);
+    } else {
+      int[] w = { 6, 10, 20, 10, 6, 20, 24 };
+      appendHeader(content, w, "Id", "Hire date", "Specialization", "Status", "Tax id", "Position", "Department");
+      appendSeparator(content, w);
+      boolean found = false;
+      for (Employee e : employees) {
+        if (e != null) {
+          appendRow(content, w, String.valueOf(e.getId()),
+              String.format("%s", e.getHireDate()),
+              String.format("%s", e.getSpecialization()),
+              String.format("%s", e.getStatus()),
+              String.format("%s", e.getTaxId()),
+              String.format("%s", e.getPosition().getName()),
+              String.format("%s", e.getDepartment().getName()));
+          found = true;
+        }
+      }
+
+      if (!found)
+        content.append("No evaluation data found.\n");
+    }
+    show("Print Employees", content.toString(), sc);
+  }
+
+  public static void printDepartments(Department[] employees, Scanner sc) {
+    StringBuilder content = new StringBuilder();
+    if (employees == null) {
+      content.append("Departments list not found: ").append(sc);
+    } else {
+      int[] w = { 50, 20, 30 };
+      appendHeader(content, w, "Name", "Phone", "Position");
+      appendSeparator(content, w);
+      boolean found = false;
+      for (Department e : employees) {
+        if (e != null) {
+          appendRow(content, w, String.valueOf(e.getName()),
+              String.format("%s", e.getPhone()),
+              String.format("%s", e.getPosition()));
+          found = true;
+        }
+      }
+
+      if (!found)
+        content.append("No evaluation data found.\n");
+    }
+    show("Print Departments", content.toString(), sc);
+  }
+
+  public static void printPositions(Position[] employees, Scanner sc) {
+    StringBuilder content = new StringBuilder();
+    if (employees == null) {
+      content.append("Positions list not found: ").append(sc);
+    } else {
+      int[] w = { 40, 8, 40 };
+      appendHeader(content, w, "Name", "Position Coefficient", "Responsibilities");
+      appendSeparator(content, w);
+      boolean found = false;
+      for (Position e : employees) {
+        if (e != null) {
+          appendRow(content, w, String.valueOf(e.getName()),
+              String.format("%s", e.getPositionCoefficient()),
+              String.format("%s", e.getResponsibilities()));
+          found = true;
+        }
+      }
+
+      if (!found)
+        content.append("No evaluation data found.\n");
+    }
+    show("Print Positions", content.toString(), sc);
   }
 
   public static void printEvaluations(Employee employee, String id, Scanner sc) {
@@ -35,8 +133,7 @@ public class PrintTables {
       content.append("Employee not found: ").append(id);
     } else {
       int[] w = { 12, 8, 10, 12, 9, 14, 10, 10 };
-      appendSeparator(content, w);
-      appendRow(content, w, "Month", "Work", "Attitude", "Discipline",
+      appendHeader(content, w, "Month", "Work", "Attitude", "Discipline",
           "Quality", "Productivity", "Teamwork", "Average");
       appendSeparator(content, w);
       Evaluation[] rows = employee.getEvaluations();
@@ -55,7 +152,7 @@ public class PrintTables {
             found = true;
           }
         }
-      appendSeparator(content, w);
+
       if (!found)
         content.append("No evaluation data found.\n");
     }
@@ -68,8 +165,7 @@ public class PrintTables {
       content.append("Employee not found: ").append(id);
     } else {
       int[] w = { 18, 18, 25, 20 };
-      appendSeparator(content, w);
-      appendRow(content, w, "Start Date", "End Date", "Contract Type", "Status");
+      appendHeader(content, w, "Start Date", "End Date", "Contract Type", "Status");
       appendSeparator(content, w);
       Contract[] rows = employee.getContracts();
       boolean found = false;
@@ -82,7 +178,7 @@ public class PrintTables {
             found = true;
           }
         }
-      appendSeparator(content, w);
+
       if (!found)
         content.append("No contract data found.\n");
     }
@@ -95,8 +191,7 @@ public class PrintTables {
       content.append("Employee not found: ").append(id);
     } else {
       int[] w = { 12, 14, 12, 12, 12, 14, 14 };
-      appendSeparator(content, w);
-      appendRow(content, w, "Month/Year", "Base Salary", "Bonus",
+      appendHeader(content, w, "Month/Year", "Base Salary", "Bonus",
           "Allowance", "Deduction", "Overtime Pay", "Net Salary");
       appendSeparator(content, w);
       Payroll[] rows = employee.getPayrolls();
@@ -114,7 +209,7 @@ public class PrintTables {
             found = true;
           }
         }
-      appendSeparator(content, w);
+
       if (!found)
         content.append("No payroll data found.\n");
     }
@@ -127,8 +222,7 @@ public class PrintTables {
       content.append("Employee not found: ").append(id);
     } else {
       int[] w = { 20, 20, 20, 16 };
-      appendSeparator(content, w);
-      appendRow(content, w, "Date", "Clock In", "Clock Out", "Worked Hours");
+      appendHeader(content, w, "Date", "Clock In", "Clock Out", "Worked Hours");
       appendSeparator(content, w);
       Attendance[] rows = employee.getAttendances();
       boolean found = false;
@@ -141,10 +235,11 @@ public class PrintTables {
             found = true;
           }
         }
-      appendSeparator(content, w);
+
       if (!found)
         content.append("No attendance data found.\n");
     }
+
     show("ATTENDANCE TABLE - " + id, content.toString(), sc);
   }
 
@@ -154,8 +249,7 @@ public class PrintTables {
       content.append("Employee not found: ").append(id);
     } else {
       int[] w = { 35, 18, 18, 16 };
-      appendSeparator(content, w);
-      appendRow(content, w, "Reason", "From Date", "To Date", "Status");
+      appendHeader(content, w, "Reason", "From Date", "To Date", "Status");
       appendSeparator(content, w);
       Absence[] rows = employee.getAbsences();
       boolean found = false;
@@ -168,7 +262,7 @@ public class PrintTables {
             found = true;
           }
         }
-      appendSeparator(content, w);
+
       if (!found)
         content.append("No absence data found.\n");
     }
@@ -181,8 +275,7 @@ public class PrintTables {
       content.append("Employee not found: ").append(id);
     } else {
       int[] w = { 45, 20, 18 };
-      appendSeparator(content, w);
-      appendRow(content, w, "Reason", "Date", "Status");
+      appendHeader(content, w, "Reason", "Date", "Status");
       appendSeparator(content, w);
       Resignation[] rows = employee.getResignations();
       boolean found = false;
@@ -194,7 +287,7 @@ public class PrintTables {
             found = true;
           }
         }
-      appendSeparator(content, w);
+
       if (!found)
         content.append("No resignation data found.\n");
     }
@@ -207,8 +300,7 @@ public class PrintTables {
       content.append("Employee not found: ").append(id);
     } else {
       int[] w = { 22, 20, 18, 18, 12 };
-      appendSeparator(content, w);
-      appendRow(content, w, "Insurance Number", "Type", "Start Date", "End Date", "Rate");
+      appendHeader(content, w, "Insurance Number", "Type", "Start Date", "End Date", "Rate");
       appendSeparator(content, w);
       Insurance[] rows = employee.getInsurances();
       boolean found = false;
@@ -221,7 +313,7 @@ public class PrintTables {
             found = true;
           }
         }
-      appendSeparator(content, w);
+
       if (!found)
         content.append("No insurance data found.\n");
     }

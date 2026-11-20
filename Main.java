@@ -107,6 +107,7 @@ public class Main {
   private static void runAdminUI(AdminAccount account, Scanner sc) {
     String title = "Admin Account";
     String subtitle = "Choose an option";
+    String content = "";
     String[] sectionNames = { "Account", "Add", "Print", "Search", "Edit", "Remove", "Other" };
     String[][] sections = { { "Logout", "Change password", "Get info", "Set info" },
         { "Employee", "Evaluation", "Contract", "Payroll", "Attendance", "Insurance", "Position", "Department" },
@@ -192,19 +193,13 @@ public class Main {
           break;
 
         case 12:
-          account.printEmployees(data.getEmployees(), sc);
+          account.printEmployees(data, sc);
           break;
         case 13:
-          title = "Print Department";
-          String content = account.getDepartments(data.getDepartments());
-
-          console.printResult(title, content, sc);
+          account.printDepartments(data, sc);
           break;
         case 14:
-          title = "Print Position";
-          content = account.getPositions(data.getPositions());
-
-          console.printResult(title, content, sc);
+          account.printPositions(data, sc);
           break;
         case 15:
           account.printPayrolls(data, sc);

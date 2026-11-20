@@ -422,48 +422,130 @@ public class AdminAccount extends Account {
         console.printResult(title, "Da sua nhan vien: " + id, sc);
     }
 
-    public void printEmployees(Employee[] employees, Scanner sc) {
+    public void printEmployees(DataHandler data, Scanner sc) {
         ConsoleUI console = new ConsoleUI();
+        SortData sort = new SortData();
+        String title = "Print Employees";
+        String subtitle = "Choose an option";
 
-        String title = "Remove Employee";
-        String content = "";
+        Employee[] currEmployees = data.getEmployees();
 
-        content += "Danh sach nhan vien:\n";
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i] != null) {
-                content += ((i + 1) + ". " + employees[i].getId()
-                        + " | " + employees[i].getFirstName() + " " + employees[i].getLastName()
-                        + " | " + employees[i].getDepartment().getName()
-                        + " | " + employees[i].getStatus()) + "\n";
+        int sortBy;
+        do {
+            String[] options = { "Id", "Hire date", "Specialization", "Status", "Tax id", "Position", "Department" };
+            sortBy = validateInt(console.printUI(title, subtitle, options, sc));
+
+            if (sortBy < 0 || 6 < sortBy) {
+                console.printResult(title, "Invalid choice", sc);
             }
+        } while (sortBy < 0 || 6 < sortBy);
+
+        boolean isAscending = askSortOrder("Ascending Sort", sc);
+
+        switch (sortBy) {
+            case 0:
+                sort.sortById(currEmployees, isAscending);
+                break;
+            case 1:
+                sort.sortByHireDate(currEmployees, isAscending);
+                break;
+            case 2:
+                sort.sortBySpecialization(currEmployees, isAscending);
+                break;
+            case 3:
+                sort.sortByStatus(currEmployees, isAscending);
+                break;
+            case 4:
+                sort.sortByTaxId(currEmployees, isAscending);
+                break;
+            case 5:
+                sort.sortByPosition(currEmployees, isAscending);
+                break;
+            case 6:
+                sort.sortByDepartment(currEmployees, isAscending);
+                break;
+
+            default:
+                break;
         }
 
-        console.printResult(title, content, sc);
+        PrintTables.printEmployees(currEmployees, sc);
     }
 
-    public String printPayrolls(Employee[] employees, String id, Scanner sc) {
-        String content = "";
+    public void printDepartments(DataHandler data, Scanner sc) {
+        ConsoleUI console = new ConsoleUI();
+        SortData sort = new SortData();
+        String title = "Print Departments";
+        String subtitle = "Choose an option";
 
-        Employee employee = this.searchEmployee(employees, id);
-        if (employee == null) {
-            return "Khong tim thay nhan vien: " + id;
-        }
+        Department[] currDepartments = data.getDepartments();
 
-        content += "Bang luong cua " + employee.getId() + ":\n";
+        int sortBy;
+        do {
+            String[] options = { "Name", "Phone", "Position" };
+            sortBy = validateInt(console.printUI(title, subtitle, options, sc));
 
-        Payroll[] payrolls = employee.getPayrolls();
-        boolean found = false;
-        for (int i = 0; i < payrolls.length; i++) {
-            if (payrolls[i] != null) {
-                content += payrolls[i].getPayroll();
-                found = true;
+            if (sortBy < 0 || 2 < sortBy) {
+                console.printResult(title, "Invalid choice", sc);
             }
-        }
-        if (!found) {
-            return "Chua co bang luong";
+        } while (sortBy < 0 || 2 < sortBy);
+
+        boolean isAscending = askSortOrder("Ascending Sort", sc);
+
+        switch (sortBy) {
+            case 0:
+                sort.sortByName(currDepartments, isAscending);
+                break;
+            case 1:
+                sort.sortByPhone(currDepartments, isAscending);
+                break;
+            case 2:
+                sort.sortByPosition(currDepartments, isAscending);
+                break;
+
+            default:
+                break;
         }
 
-        return content;
+        PrintTables.printDepartments(currDepartments, sc);
+    }
+
+    public void printPositions(DataHandler data, Scanner sc) {
+        ConsoleUI console = new ConsoleUI();
+        SortData sort = new SortData();
+        String title = "Print Positions";
+        String subtitle = "Choose an option";
+
+        Position[] currPositions = data.getPositions();
+
+        int sortBy;
+        do {
+            String[] options = { "Name", "Phone", "Position" };
+            sortBy = validateInt(console.printUI(title, subtitle, options, sc));
+
+            if (sortBy < 0 || 2 < sortBy) {
+                console.printResult(title, "Invalid choice", sc);
+            }
+        } while (sortBy < 0 || 2 < sortBy);
+
+        boolean isAscending = askSortOrder("Ascending Sort", sc);
+
+        switch (sortBy) {
+            case 0:
+                sort.sortByName(currPositions, isAscending);
+                break;
+            case 1:
+                sort.sortByCoefficient(currPositions, isAscending);
+                break;
+            case 2:
+                sort.sortByResponsibilities(currPositions, isAscending);
+                break;
+
+            default:
+                break;
+        }
+
+        PrintTables.printPositions(currPositions, sc);
     }
 
     public void searchEmployee(Employee[] employees, Scanner sc) {
