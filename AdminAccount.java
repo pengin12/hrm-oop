@@ -2070,4 +2070,278 @@ public class AdminAccount extends Account {
 
         PrintTables.printInsurances(currEmployee, id, sc);
     }
+
+    public void editDepartment(Scanner sc, Department[] departments) {
+        ConsoleUI console = new ConsoleUI();
+
+        String title = "Edit Department";
+        String subtitle = "Choose a department";
+
+        boolean hasDepartment = false;
+        if (departments != null) {
+            for (int i = 0; i < departments.length; i++) {
+                if (departments[i] != null) {
+                    hasDepartment = true;
+                    break;
+                }
+            }
+        }
+        if (!hasDepartment) {
+            console.printResult(title, "No departments available", sc);
+            return;
+        }
+
+        int choice;
+        boolean valid;
+        do {
+            String content = getDepartments(departments) + "\nEnter 0 to go back\n";
+
+            try {
+                choice = Integer.parseInt(console.printUI(title, subtitle, content, sc).trim());
+            } catch (NumberFormatException e) {
+                choice = -1;
+            }
+
+            if (choice == 0) {
+                return;
+            }
+
+            valid = choice >= 1 && choice <= departments.length && departments[choice - 1] != null;
+            if (!valid) {
+                console.printResult(title, "Department not exist", sc);
+            }
+        } while (!valid);
+
+        Department department = departments[choice - 1];
+
+        String[] options = { "Exit", "Name", "Phone", "Position" };
+
+        do {
+            String content = "Name: " + department.getName() + "\n"
+                    + "Phone: " + department.getPhone() + "\n"
+                    + "Position: " + department.getPosition();
+
+            try {
+                choice = Integer.parseInt(console.printUI(title, "Choose an option", content, options, sc).trim());
+            } catch (NumberFormatException e) {
+                choice = -1;
+            }
+
+            switch (choice) {
+                case 0:
+                    break;
+
+                case 1: {
+                    String newName;
+                    boolean duplicate;
+
+                    do {
+                        newName = console.printUI(title, "Set Name",
+                                "Current name: " + department.getName(), "New name", sc).trim();
+
+                        duplicate = false;
+
+                        if (newName.isEmpty() || newName.length() > 30) {
+                            console.printResult(title, "Name must be 1-30 characters", sc);
+                            duplicate = true;
+                        } else {
+                            for (int i = 0; i < departments.length; i++) {
+                                if (departments[i] != null && departments[i] != department
+                                        && departments[i].getName().equalsIgnoreCase(newName)) {
+                                    duplicate = true;
+                                    console.printResult(title, "Department name already exists", sc);
+                                    break;
+                                }
+                            }
+                        }
+
+                    } while (duplicate);
+
+                    department.setName(newName);
+                    console.printResult(title, "Set name successfully", sc);
+                    break;
+                }
+
+                case 2: {
+                    String newPhone;
+                    do {
+                        newPhone = console.printUI(title, "Set Phone",
+                                "Current phone: " + department.getPhone(), "New phone", sc).trim();
+
+                        if (!newPhone.matches("[0-9]{1,11}")) {
+                            console.printResult(title, "Phone must be 1-11 digits", sc);
+                        }
+                    } while (!newPhone.matches("[0-9]{1,11}"));
+
+                    department.setPhone(newPhone);
+                    console.printResult(title, "Set phone successfully", sc);
+                    break;
+                }
+
+                case 3: {
+                    String newPosition;
+                    do {
+                        newPosition = console.printUI(title, "Set Position",
+                                "Current position: " + department.getPosition(), "New position", sc).trim();
+
+                        if (newPosition.isEmpty() || newPosition.length() > 61) {
+                            console.printResult(title, "Position must be 1-61 characters", sc);
+                        }
+                    } while (newPosition.isEmpty() || newPosition.length() > 61);
+
+                    department.setPosition(newPosition);
+                    console.printResult(title, "Set position successfully", sc);
+                    break;
+                }
+
+                default:
+                    console.printResult(title, "Invalid choice", sc);
+                    break;
+            }
+
+        } while (choice != 0);
+    }
+
+    public void editPosition(Scanner sc, Position[] positions) {
+        ConsoleUI console = new ConsoleUI();
+
+        String title = "Edit Position";
+        String subtitle = "Choose a position";
+
+        boolean hasPosition = false;
+        if (positions != null) {
+            for (int i = 0; i < positions.length; i++) {
+                if (positions[i] != null) {
+                    hasPosition = true;
+                    break;
+                }
+            }
+        }
+        if (!hasPosition) {
+            console.printResult(title, "No positions available", sc);
+            return;
+        }
+
+        int choice;
+        boolean valid;
+        do {
+            String content = getPositions(positions) + "\nEnter 0 to go back\n";
+
+            try {
+                choice = Integer.parseInt(console.printUI(title, subtitle, content, sc).trim());
+            } catch (NumberFormatException e) {
+                choice = -1;
+            }
+
+            if (choice == 0) {
+                return;
+            }
+
+            valid = choice >= 1 && choice <= positions.length && positions[choice - 1] != null;
+            if (!valid) {
+                console.printResult(title, "Position not exist", sc);
+            }
+        } while (!valid);
+
+        Position position = positions[choice - 1];
+
+        String[] options = { "Exit", "Name", "Position coefficient", "Responsibilities" };
+
+        do {
+            String content = "Name: " + position.getName() + "\n"
+                    + "Position coefficient: " + position.getPositionCoefficient() + "\n"
+                    + "Responsibilities: " + position.getResponsibilities();
+
+            try {
+                choice = Integer.parseInt(console.printUI(title, "Choose an option", content, options, sc).trim());
+            } catch (NumberFormatException e) {
+                choice = -1;
+            }
+
+            switch (choice) {
+                case 0:
+                    break;
+
+                case 1: {
+                    String newName;
+                    boolean duplicate;
+
+                    do {
+                        newName = console.printUI(title, "Set Name",
+                                "Current name: " + position.getName(), "New name", sc).trim();
+
+                        duplicate = false;
+
+                        if (newName.isEmpty() || newName.length() > 30) {
+                            console.printResult(title, "Name must be 1-30 characters", sc);
+                            duplicate = true;
+                        } else {
+                            for (int i = 0; i < positions.length; i++) {
+                                if (positions[i] != null && positions[i] != position
+                                        && positions[i].getName().equalsIgnoreCase(newName)) {
+                                    duplicate = true;
+                                    console.printResult(title, "Position name already exists", sc);
+                                    break;
+                                }
+                            }
+                        }
+
+                    } while (duplicate);
+
+                    position.setName(newName);
+                    console.printResult(title, "Set name successfully", sc);
+                    break;
+                }
+
+                case 2: {
+                    double newCoefficient;
+                    boolean validCoefficient;
+
+                    do {
+                        String text = console.printUI(title, "Set Position coefficient",
+                                "Current coefficient: " + position.getPositionCoefficient(),
+                                "New coefficient", sc).trim();
+
+                        try {
+                            newCoefficient = Double.parseDouble(text);
+                        } catch (NumberFormatException e) {
+                            newCoefficient = -1;
+                        }
+
+                        validCoefficient = Double.isFinite(newCoefficient) && newCoefficient >= 0
+                                && Double.toString(newCoefficient).length() <= 25;
+                        if (!validCoefficient) {
+                            console.printResult(title, "Coefficient must be a valid number >= 0", sc);
+                        }
+                    } while (!validCoefficient);
+
+                    position.setPositionCoefficient(newCoefficient);
+                    console.printResult(title, "Set position coefficient successfully", sc);
+                    break;
+                }
+
+                case 3: {
+                    String newResponsibilities;
+                    do {
+                        newResponsibilities = console.printUI(title, "Set Responsibilities",
+                                "Current responsibilities: " + position.getResponsibilities(),
+                                "New responsibilities", sc).trim();
+
+                        if (newResponsibilities.isEmpty() || newResponsibilities.length() > 47) {
+                            console.printResult(title, "Responsibilities must be 1-47 characters", sc);
+                        }
+                    } while (newResponsibilities.isEmpty() || newResponsibilities.length() > 47);
+
+                    position.setResponsibilities(newResponsibilities);
+                    console.printResult(title, "Set responsibilities successfully", sc);
+                    break;
+                }
+
+                default:
+                    console.printResult(title, "Invalid choice", sc);
+                    break;
+            }
+
+        } while (choice != 0);
+    }
 }
