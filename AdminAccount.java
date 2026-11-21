@@ -78,9 +78,8 @@ public class AdminAccount extends Account {
     public void addEmployeeAccount(Account[] accounts, Employee emp) {
         for (int i = 0; i < accounts.length; i++) {
             if (accounts[i] == null) {
-                accounts[i].setUsername(emp.getId());
-                accounts[i].setPassword(DEFAULT_PASSWORD);
-                accounts[i].setStatus(Account.AccountStatus.ACTIVE);
+                EmployeeAccount acc = new EmployeeAccount(emp.getId(), DEFAULT_PASSWORD, Account.AccountStatus.ACTIVE);
+                accounts[i] = acc;
             }
         }
     }
