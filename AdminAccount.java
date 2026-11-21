@@ -956,7 +956,7 @@ public class AdminAccount extends Account {
             input = "Giờ ra (HH:mm): ";
             clockOut = LocalTime.parse(console.printUI(title, subtitle, options, input, sc), timeFormatter);
 
-            if (clockIn.isAfter(clockOut)) {
+            if (clockIn.isBefore(clockOut)) {
                 console.printResult(title, "Giờ vào nên trước giờ ra", sc);
             }
         } while (clockIn.isBefore(clockOut));
@@ -1002,6 +1002,7 @@ public class AdminAccount extends Account {
 
         LocalDate startDate;
         LocalDate endDate;
+        boolean valid;
         do {
             input = "Ngày bắt đầu (dd/MM/yyyy): ";
             startDate = console.printDateUI(title, subtitle, options, input, sc);
@@ -1009,13 +1010,14 @@ public class AdminAccount extends Account {
             input = "Ngày kết thúc (dd/MM/yyyy): ";
             endDate = console.printDateUI(title, subtitle, options, input, sc);
 
-            if (startDate.isAfter(endDate)) {
+            valid = !startDate.isAfter(endDate);
+            if (!valid) {
                 console.printResult(title, "Ngày bắt đầu nên trước ngày kết thúc", sc);
             }
-        } while (startDate.isBefore(endDate));
+        } while (!valid);
 
         input = "Mức: ";
-        double rate = Double.parseDouble(console.printUI(title, subtitle, options, input, sc));
+        double rate = Double.parseDouble(console.printUI(title, subtitle, options, input, sc).trim());
 
         return new Insurance(insuranceNumber, type, startDate, endDate, rate);
     }
