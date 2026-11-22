@@ -163,7 +163,7 @@ public class Main {
         case 4:
           Employee emp = account.createEmployee(data, limits, sc);
           account.addEmployee(data.getEmployees(), emp, sc);
-          account.addEmployeeAccount(data.getAccounts(), emp);
+          account.addEmployeeAccount(data.getAccounts(), emp, sc);
           break;
         case 5:
           account.addEvaluation(data.getEmployees(), sc);
