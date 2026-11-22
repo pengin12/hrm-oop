@@ -9,6 +9,7 @@ public class LimitHandler {
   private int maxEmployees;
   private int maxDepartments;
   private int maxPositions;
+  private int maxRecruitments;
   private int maxEvaluations;
   private int maxContracts;
   private int maxPayrolls;
@@ -27,6 +28,7 @@ public class LimitHandler {
       this.setMaxEmployees(Integer.parseInt(sc.nextLine()));
       this.setMaxDepartments(Integer.parseInt(sc.nextLine()));
       this.setMaxPositions(Integer.parseInt(sc.nextLine()));
+      this.setMaxRecruitments(Integer.parseInt(sc.nextLine()));
       this.setMaxEvaluations(Integer.parseInt(sc.nextLine()));
       this.setMaxContracts(Integer.parseInt(sc.nextLine()));
       this.setMaxPayrolls(Integer.parseInt(sc.nextLine()));
@@ -49,6 +51,7 @@ public class LimitHandler {
       limitFileWriter.write(maxEmployees + "\n");
       limitFileWriter.write(maxDepartments + "\n");
       limitFileWriter.write(maxPositions + "\n");
+      limitFileWriter.write(maxRecruitments + "\n");
       limitFileWriter.write(maxEvaluations + "\n");
       limitFileWriter.write(maxContracts + "\n");
       limitFileWriter.write(maxPayrolls + "\n");
@@ -68,7 +71,7 @@ public class LimitHandler {
       FileWriter limitFileWriter = new FileWriter(limitPath);
 
       String data = "";
-      String[] samples = { "250", "200", "50", "100", "5000", "5000", "5000", "5000", "5000", "5000", "5000" };
+      String[] samples = { "250", "200", "50", "100", "5000", "5000", "5000", "5000", "5000", "5000", "5000", "5000" };
       data += String.join("\n", samples) + "\n";
 
       limitFileWriter.write(data);
@@ -165,5 +168,13 @@ public class LimitHandler {
 
   public void setMaxResignations(int maxResignations) {
     this.maxResignations = maxResignations;
+  }
+
+  public int getMaxRecruitments() {
+    return maxRecruitments;
+  }
+
+  public void setMaxRecruitments(int maxApplications) {
+    this.maxRecruitments = maxApplications;
   }
 }
