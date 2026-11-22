@@ -1487,26 +1487,94 @@ public class AdminAccount extends Account {
         String[] options = {};
         String input;
 
-        input = "Tên";
-        String firstName = console.printUI(title, subtitle, options, input, sc);
+        if (data.getRecruitments() == null) {
+            console.printResult(title, "Chưa có đợt tuyển dụng nào", sc);
+            return null;
+        }
 
-        input = "Họ";
-        String lastName = console.printUI(title, subtitle, options, input, sc);
+        int recruitmentIdx = validateInt(console.printUI(
+                title,
+                subtitle,
+                PrintTables.getRecruitments(data.getRecruitments()),
+                "Chọn đợt tuyển dụng",
+                sc).trim()) - 1;
 
-        input = "Email";
-        String email = console.printUI(title, subtitle, options, input, sc);
+        if (recruitmentIdx < 0 ||
+                recruitmentIdx >= data.getRecruitments().length ||
+                data.getRecruitments()[recruitmentIdx] == null) {
 
-        input = "Số điện thoại";
-        String phone = console.printUI(title, subtitle, options, input, sc);
+            console.printResult(title, "Lựa chọn không hợp lệ", sc);
+            return null;
+        }
 
-        input = "Ngày sinh (dd/MM/yyyy)";
-        LocalDate dateOfBirth = console.printDateUI(title, subtitle, options, input, sc);
+        Recruitment chosenRecruitment = data.getRecruitments()[recruitmentIdx];
 
-        input = "Giới tính";
-        String gender = console.printUI(title, subtitle, options, input, sc);
+        Application[] applications = chosenRecruitment.getApplications();
 
-        input = "Địa chỉ";
-        Address address = createAddress(sc);
+        if (applications == null || chosenRecruitment.getApplicationCount() == 0) {
+            console.printResult(title, "Đợt tuyển dụng chưa có hồ sơ ứng tuyển", sc);
+            return null;
+        }
+
+        Application[] acceptedApplications = new Application[chosenRecruitment.getApplicationCount()];
+
+        int acceptedCount = 0;
+
+        for (int i = 0; i < chosenRecruitment.getApplicationCount(); i++) {
+            Application a = applications[i];
+
+            if (a != null &&
+                    a.getStatus() == Application.ApplicationStatus.ACCEPTED) {
+
+                acceptedApplications[acceptedCount] = a;
+                acceptedCount++;
+            }
+        }
+
+        if (acceptedCount == 0) {
+            console.printResult(
+                    title,
+                    "Đợt tuyển dụng chưa có hồ sơ nào được chấp nhận",
+                    sc);
+            return null;
+        }
+
+        String content = "";
+
+        for (int i = 0; i < acceptedCount; i++) {
+            Application a = acceptedApplications[i];
+            Candidate c = a.getCandidate();
+
+            content += "[" + (i + 1) + "] Hồ sơ ứng tuyển của "
+                    + c.getLastName() + " " + c.getFirstName() + "\n";
+
+            content += "Ngày ứng tuyển: " + a.getApplyDate() + "\n";
+            content += "Thư xin việc: " + a.getCoverLetter() + "\n";
+            content += "CV: " + a.getResume() + "\n";
+            content += "Trạng thái: " + a.getStatus() + "\n\n";
+        }
+
+        int choice = validateInt(console.printUI(
+                title,
+                subtitle,
+                content,
+                "Chọn hồ sơ ứng tuyển",
+                sc).trim());
+
+        if (choice < 1 || choice > acceptedCount) {
+            console.printResult(title, "Lựa chọn hồ sơ không hợp lệ", sc);
+            return null;
+        }
+
+        Candidate candidate = acceptedApplications[choice - 1].getCandidate();
+
+        String firstName = candidate.getFirstName();
+        String lastName = candidate.getLastName();
+        String email = candidate.getEmail();
+        String phone = candidate.getPhone();
+        LocalDate dateOfBirth = candidate.getDateOfBirth();
+        String gender = candidate.getGender();
+        Address address = candidate.getAddress();
 
         String id = "EMP";
         for (int i = 0; i < data.getEmployees().length; i++) {
@@ -1549,8 +1617,8 @@ public class AdminAccount extends Account {
 
         Insurance[] insurances = new Insurance[limits.getMaxInsurances()];
 
-        Position position = data.getPositions()[choosePosition(data, limits, sc)];
-        Department department = data.getDepartments()[chooseDepartment(data, limits, sc)];
+        Position position = chosenRecruitment.getPosition();
+        Department department = chosenRecruitment.getDepartment();
 
         return new Employee(firstName, lastName, email, phone, dateOfBirth,
                 gender, address, id, hireDate, specialization, status,

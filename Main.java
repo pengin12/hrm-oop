@@ -162,6 +162,10 @@ public class Main {
 
         case 4:
           Employee emp = account.createEmployee(data, limits, sc);
+          if (emp == null) {
+            break;
+          }
+
           account.addEmployee(data.getEmployees(), emp, sc);
           account.addEmployeeAccount(data.getAccounts(), emp, sc);
           break;
