@@ -271,11 +271,8 @@ public class Main {
           account.replyRequest(data, sc);
           break;
         case 30:
-          RecruitmentMenu.recruitmentMenu(
-              data.getRecruitments(),
-              data.getDepartments(),
-              data.getPositions(),
-              sc);
+          RecruitmentMenu.recruitmentMenu(data, sc);
+          break;
 
         default:
           title = "Tài khoản quản trị";

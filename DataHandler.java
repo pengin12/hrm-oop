@@ -334,8 +334,7 @@ public class DataHandler {
     int idx = 0;
     try (Scanner sc = new Scanner(new File(recruitmentPath))) {
       while (sc.hasNextLine() && idx < recruitments.length) {
-        recruitments[idx] = new Recruitment();
-        Recruitment thisRecruitment = recruitments[idx];
+        Recruitment thisRecruitment = new Recruitment();
 
         thisRecruitment.setNumberOfPositions(Integer.parseInt(sc.nextLine()));
         thisRecruitment.setDeadline(LocalDate.parse(sc.nextLine()));
@@ -380,8 +379,10 @@ public class DataHandler {
           sc.nextLine();
           tmp = sc.nextLine();
         }
+        recruitments[idx] = thisRecruitment;
 
         sc.nextLine();
+        idx++;
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();

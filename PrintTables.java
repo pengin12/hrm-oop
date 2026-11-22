@@ -54,6 +54,36 @@ public class PrintTables {
     console.printResult(title, content, sc);
   }
 
+  public static String getRecruitments(Recruitment[] recruitments) {
+    StringBuilder content = new StringBuilder();
+    if (recruitments == null) {
+      content.append("Không tìm thấy danh sách tuyển dụng: ");
+    } else {
+      int[] w = { 5, 20, 30, 15, 12, 10 };
+      appendHeader(content, w, "STT", "Chức vụ", "Phòng ban", "Số lượng", "Hạn nộp", "Trạng thái");
+      appendSeparator(content, w);
+      boolean found = false;
+      int idx = 1;
+      for (Recruitment e : recruitments) {
+        if (e != null) {
+          appendRow(content, w, String.valueOf(idx),
+              String.format("%s", e.getPosition().getName()),
+              String.format("%s", e.getDepartment().getName()),
+              String.format("%s", e.getNumberOfPositions()),
+              String.format("%s", e.getDeadline().format(dateFormatter)),
+              String.format("%s", e.getStatus()));
+          found = true;
+          idx++;
+        }
+      }
+
+      if (!found)
+        content.append("Không tìm thấy dữ liệu tuyển dụng.\n");
+    }
+
+    return content.toString();
+  }
+
   public static void printEmployees(Employee[] employees, Scanner sc) {
     StringBuilder content = new StringBuilder();
     if (employees == null) {

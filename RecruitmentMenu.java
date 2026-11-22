@@ -5,6 +5,25 @@ public class RecruitmentMenu {
 
     private static ConsoleUI console = new ConsoleUI();
 
+    private static int validateInt(String str) {
+        if (str.matches("[0-9]+")) {
+            return Integer.parseInt(str);
+        }
+
+        return -1;
+    }
+
+    private static int getOccupied(Object[] objArr) {
+        int occupied = 0;
+        for (Object obj : objArr) {
+            if (obj != null) {
+                occupied++;
+            }
+        }
+
+        return occupied;
+    }
+
     private static int inputNumber(String title, String message, Scanner sc) {
         String input = console.printUI(
                 title, "", "", message, sc);
@@ -17,42 +36,17 @@ public class RecruitmentMenu {
     }
 
     public static void showRecruitments(Recruitment[] recruitments, Scanner sc) {
-        String content = "";
-
-        for (int i = 0; i < recruitments.length; i++) {
-            Recruitment r = recruitments[i];
-
-            if (r != null) {
-                String department = "Chưa xác định";
-                String position = "Chưa xác định";
-
-                if (r.getDepartment() != null) {
-                    department = r.getDepartment().getName();
-                }
-
-                if (r.getPosition() != null) {
-                    position = r.getPosition().getName();
-                }
-
-                content += (i + 1) + ". " + position + "\n";
-                content += "Phòng ban: " + department + "\n";
-                content += "Số lượng tuyển: " + r.getNumberOfPositions() + "\n";
-                content += "Hạn nộp hồ sơ: " + r.getDeadline() + "\n";
-                content += "Trạng thái: " + r.getStatus() + "\n\n";
-            }
-        }
-
-        if (content.isEmpty()) {
-            content = "Chưa có đợt tuyển dụng nào.";
-        }
-
-        console.printResult("Danh sách tuyển dụng", content, sc);
+        console.printResult(
+                "Danh sách tuyển dụng",
+                PrintTables.getRecruitments(recruitments),
+                sc);
     }
 
-    public static void recruitmentMenu(Recruitment[] recruitments,
-            Department[] departments,
-            Position[] positions,
+    public static void recruitmentMenu(DataHandler data,
             Scanner sc) {
+        String title = "Quản lý tuyển dụng";
+        String subtitle = "";
+
         while (true) {
             String[] options = {
                     "Quay lại",
@@ -63,45 +57,40 @@ public class RecruitmentMenu {
                     "Xét duyệt hồ sơ ứng tuyển"
             };
 
-            String input = console.printUI(
-                    "Quản lý tuyển dụng", "", options, sc);
-
-            int choice;
-
-            try {
-                choice = Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                choice = -1;
-            }
+            int choice = validateInt(console.printUI(title, subtitle, options, sc));
 
             switch (choice) {
                 case 0:
                     return;
 
                 case 1:
-                    showRecruitments(recruitments, sc);
+                    showRecruitments(data.getRecruitments(), sc);
                     break;
 
                 case 2:
                     createRecruitment(
-                            recruitments, departments, positions, sc);
+                            data.getRecruitments(),
+                            data.getDepartments(),
+                            data.getPositions(),
+                            sc);
                     break;
 
                 case 3:
-                    changeStatus(recruitments, true, sc);
+                    changeStatus(data.getRecruitments(), true, sc);
                     break;
 
                 case 4:
-                    changeStatus(recruitments, false, sc);
+                    changeStatus(data.getRecruitments(), false, sc);
                     break;
 
                 case 5:
-                    reviewApplications(recruitments, sc);
+                    reviewApplications(data.getRecruitments(), sc);
                     break;
 
                 default:
                     console.printResult(
                             "Lỗi", "Lựa chọn không hợp lệ", sc);
+                    break;
             }
         }
     }
@@ -111,6 +100,8 @@ public class RecruitmentMenu {
             Department[] departments,
             Position[] positions,
             Scanner sc) {
+        String title = "Tạo đợt tuyển dụng";
+        String subtitle = "";
 
         int index = -1;
 
@@ -129,58 +120,59 @@ public class RecruitmentMenu {
 
         String content = "";
 
-        for (int i = 0; i < departments.length; i++) {
-            if (departments[i] != null) {
-                content += (i + 1) + ". "
-                        + departments[i].getName() + "\n";
+        int departmentsOccupied = getOccupied(departments);
+        String[] departmentOpts = new String[departmentsOccupied];
+        int idx = 0;
+        for (int i = 0; i < departmentsOccupied; i++) {
+            if (departments[i] != null && departments[i].getName() != null) {
+                departmentOpts[idx] = departments[i].getName();
+                idx++;
             }
         }
 
-        int d = inputNumber(
-                "Chọn phòng ban", content + "\nNhập số thứ tự phòng ban", sc) - 1;
-
+        subtitle = "Hãy chọn phòng ban";
+        int d = validateInt(console.printUI(title, subtitle, departmentOpts, sc));
         if (d < 0 || d >= departments.length) {
-            console.printResult(
-                    "Lỗi", "Phòng ban không hợp lệ.", sc);
+            console.printResult(title, "Phòng ban không hợp lệ.", sc);
             return;
         }
 
         if (departments[d] == null) {
-            console.printResult(
-                    "Lỗi", "Không tìm thấy phòng ban.", sc);
+            console.printResult(title, "Không tìm thấy phòng ban.", sc);
             return;
         }
 
-        content = "";
-
-        for (int i = 0; i < positions.length; i++) {
-            if (positions[i] != null) {
-                content += (i + 1) + ". "
-                        + positions[i].getName() + "\n";
+        int positionsOccupied = getOccupied(positions);
+        String[] positionOpts = new String[positionsOccupied];
+        idx = 0;
+        for (int i = 0; i < positionsOccupied; i++) {
+            if (positions[i] != null && positions[i].getName() != null) {
+                positionOpts[idx] = positions[i].getName();
+                idx++;
             }
         }
 
-        int p = inputNumber(
-                "Chọn vị trí tuyển dụng", content + "\nNhập số thứ tự vị trí", sc) - 1;
-
+        subtitle = "Hãy chọn chức vụ";
+        int p = validateInt(console.printUI(title, subtitle, positionOpts, sc));
         if (p < 0 || p >= positions.length) {
-            console.printResult(
-                    "Lỗi", "Vị trí tuyển dụng không hợp lệ.", sc);
+            console.printResult(title, "Vị trí tuyển dụng không hợp lệ.", sc);
             return;
         }
 
         if (positions[p] == null) {
-            console.printResult(
-                    "Lỗi", "Không tìm thấy vị trí tuyển dụng.", sc);
+            console.printResult(title, "Không tìm thấy vị trí tuyển dụng.", sc);
             return;
         }
 
-        int slots = inputNumber(
-                "Tạo đợt tuyển dụng", "Số lượng nhân viên cần tuyển", sc);
-
+        subtitle = "";
+        int slots = validateInt(console.printUI(
+                title,
+                subtitle,
+                content,
+                "Số lượng nhân viên cần tuyển",
+                sc));
         if (slots <= 0) {
-            console.printResult(
-                    "Lỗi", "Số lượng tuyển dụng không hợp lệ.", sc);
+            console.printResult(title, "Số lượng tuyển dụng không hợp lệ.", sc);
             return;
         }
 
@@ -189,14 +181,12 @@ public class RecruitmentMenu {
                 "", "Hạn nộp hồ sơ (dd/MM/yyyy)", sc);
 
         if (deadline == null) {
-            console.printResult(
-                    "Lỗi", "Hạn nộp hồ sơ không hợp lệ.", sc);
+            console.printResult(title, "Hạn nộp hồ sơ không hợp lệ.", sc);
             return;
         }
 
         if (deadline.isBefore(LocalDate.now())) {
-            console.printResult(
-                    "Lỗi", "Hạn nộp hồ sơ không được ở quá khứ.", sc);
+            console.printResult(title, "Hạn nộp hồ sơ không được ở quá khứ.", sc);
             return;
         }
 
@@ -209,29 +199,29 @@ public class RecruitmentMenu {
 
         recruitments[index] = recruitment;
 
-        console.printResult(
-                "Tạo đợt tuyển dụng",
-                "Tạo đợt tuyển dụng thành công!", sc);
+        console.printResult(title, "Tạo đợt tuyển dụng thành công!", sc);
     }
 
     private static void changeStatus(Recruitment[] recruitments,
             boolean close,
             Scanner sc) {
+        String title = "Quản lý đợt tuyển dụng";
 
-        showRecruitments(recruitments, sc);
-
-        int index = inputNumber(
-                "Quản lý đợt tuyển dụng", "Nhập số thứ tự đợt tuyển dụng", sc) - 1;
+        int index = validateInt(console.printUI(
+                title,
+                "",
+                "\n" + PrintTables.getRecruitments(recruitments),
+                sc)) - 1;
 
         if (index < 0 || index >= recruitments.length) {
             console.printResult(
-                    "Lỗi", "Đợt tuyển dụng không hợp lệ.", sc);
+                    title, "Đợt tuyển dụng không hợp lệ.", sc);
             return;
         }
 
         if (recruitments[index] == null) {
             console.printResult(
-                    "Lỗi", "Không tìm thấy đợt tuyển dụng.", sc);
+                    title, "Không tìm thấy đợt tuyển dụng.", sc);
             return;
         }
 
@@ -343,15 +333,15 @@ public class RecruitmentMenu {
     private static void reviewApplications(
             Recruitment[] recruitments,
             Scanner sc) {
-
-        showRecruitments(recruitments, sc);
-
-        int index = inputNumber(
-                "Xét duyệt hồ sơ", "Nhập số thứ tự đợt tuyển dụng", sc) - 1;
+        int index = validateInt(console.printUI(
+                "Xét duyệt hồ sơ",
+                "",
+                "\n" + PrintTables.getRecruitments(recruitments),
+                sc)) - 1;
 
         if (index < 0 || index >= recruitments.length) {
             console.printResult(
-                    "Lỗi", "Đợt tuyển dụng không hợp lệ.", sc);
+                    "Xét duyệt hồ sơ", "Đợt tuyển dụng không hợp lệ.", sc);
             return;
         }
 
@@ -359,7 +349,7 @@ public class RecruitmentMenu {
 
         if (recruitment == null) {
             console.printResult(
-                    "Lỗi", "Không tìm thấy đợt tuyển dụng.", sc);
+                    "Xét duyệt hồ sơ", "Không tìm thấy đợt tuyển dụng.", sc);
             return;
         }
 
