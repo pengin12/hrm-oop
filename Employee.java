@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Employee extends Person {
@@ -22,6 +23,8 @@ public class Employee extends Person {
   private String taxId;
   private Position position;
   private Department department;
+
+  private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
   public Employee() {
     super(null, null, null, null, null, null, null);
@@ -162,7 +165,7 @@ public class Employee extends Person {
     String content = "";
 
     content += "Mã: " + getId() + "\n";
-    content += "Ngày tuyển dụng: " + getHireDate() + "\n";
+    content += "Ngày tuyển dụng: " + getHireDate().format(dateFormatter) + "\n";
     content += "Chuyên môn: " + getSpecialization() + "\n";
     content += "Trạng thái: " + getStatus() + "\n";
     content += "Số đánh giá: " + getEvaluationsOccupied() + "\n";
