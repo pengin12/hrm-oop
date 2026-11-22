@@ -381,7 +381,7 @@ public class Main {
     do {
       title = "Quản lý nhân sự";
       subtitle = "Vui lòng chọn chức năng";
-      String[] options = { "Thoát", "Tạo tài khoản quản trị", "Đăng nhập" };
+      String[] options = { "Thoát", "Tạo tài khoản quản trị", "Đăng nhập", "Tạo đơn xin ứng tuyển" };
       choice = validateInt(console.printUI(title, subtitle, options, sc));
 
       switch (choice) {
@@ -436,6 +436,9 @@ public class Main {
               runAdminUI((AdminAccount) data.getAccounts()[index], sc);
             }
           }
+          break;
+        case 3:
+          RecruitmentMenu.candidateMenu(data.getRecruitments(), sc);
           break;
 
         default:
