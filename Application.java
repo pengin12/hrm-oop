@@ -17,12 +17,19 @@ public class Application {
 	private String coverLetter;
 	private String resume;
 	private ApplicationStatus status;
+	private Candidate candidate;
 
-	public Application(LocalDate applyDate, String coverLetter, String resume, ApplicationStatus status) {
+	public Application(
+			LocalDate applyDate,
+			String coverLetter,
+			String resume,
+			ApplicationStatus status,
+			Candidate candidate) {
 		this.applyDate = applyDate;
 		this.coverLetter = coverLetter;
 		this.resume = resume;
 		this.status = status;
+		this.candidate = candidate;
 	}
 
 	public LocalDate getApplyDate() {
@@ -55,5 +62,13 @@ public class Application {
 
 	public void setStatus(ApplicationStatus status) {
 		this.status = status;
+	}
+
+	public Candidate getCandidate() {
+		return candidate;
+	}
+
+	public void setCandidate(Candidate candidate) {
+		this.candidate = candidate;
 	}
 }

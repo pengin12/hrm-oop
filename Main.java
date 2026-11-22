@@ -118,7 +118,7 @@ public class Main {
         { "Nhân viên", "Phòng ban", "Chức vụ" },
         { "Nhân viên", "Phòng ban", "Chức vụ" },
         { "Nhân viên" },
-        { "Phản hồi yêu cầu" },
+        { "Phản hồi yêu cầu", "Đánh giá hồ sơ ứng viên" },
     };
 
     int choice;
@@ -163,7 +163,7 @@ public class Main {
         case 4:
           Employee emp = account.createEmployee(data, limits, sc);
           account.addEmployee(data.getEmployees(), emp, sc);
-          account.addEmployeeAccount(data.getAccounts(), emp);
+          account.addEmployeeAccount(data.getAccounts(), emp, sc);
           break;
         case 5:
           account.addEvaluation(data.getEmployees(), sc);
@@ -270,6 +270,12 @@ public class Main {
         case 29:
           account.replyRequest(data, sc);
           break;
+        case 30:
+          RecruitmentMenu.recruitmentMenu(
+              data.getRecruitments(),
+              data.getDepartments(),
+              data.getPositions(),
+              sc);
 
         default:
           title = "Tài khoản quản trị";
@@ -316,12 +322,14 @@ public class Main {
         limits.setMaxEmployees(inputNonNegative(sc, "Số lượng nhân viên tối đa"));
         limits.setMaxDepartments(inputNonNegative(sc, "Số lượng phòng ban tối đa"));
         limits.setMaxPositions(inputNonNegative(sc, "Số lượng chức vụ tối đa"));
+        limits.setMaxRecruitments(inputNonNegative(sc, "Số lượng tuyển dụng"));
 
         data = new DataHandler(
             limits.getMaxAccounts(),
             limits.getMaxEmployees(),
             limits.getMaxDepartments(),
             limits.getMaxPositions(),
+            limits.getMaxRecruitments(),
             limits.getMaxEvaluations(),
             limits.getMaxContracts(),
             limits.getMaxPayrolls(),
@@ -346,6 +354,7 @@ public class Main {
             limits.getMaxEmployees(),
             limits.getMaxDepartments(),
             limits.getMaxPositions(),
+            limits.getMaxRecruitments(),
             limits.getMaxEvaluations(),
             limits.getMaxContracts(),
             limits.getMaxPayrolls(),
@@ -458,6 +467,7 @@ public class Main {
           limits.getMaxEmployees(),
           limits.getMaxDepartments(),
           limits.getMaxPositions(),
+          limits.getMaxRecruitments(),
           limits.getMaxEvaluations(),
           limits.getMaxContracts(),
           limits.getMaxPayrolls(),

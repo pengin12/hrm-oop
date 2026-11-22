@@ -20,6 +20,7 @@ public class DataHandler {
   private Employee[] employees;
   private Department[] departments;
   private Position[] positions;
+  private Recruitment[] recruitments;
 
   private String currentDirectory = System.getProperty("user.dir");
   private String directoryPath = currentDirectory + File.separator + "data";
@@ -28,12 +29,14 @@ public class DataHandler {
   private String employeePath = directoryPath + File.separator + "employees.txt";
   private String departmentPath = directoryPath + File.separator + "departments.txt";
   private String positionPath = directoryPath + File.separator + "positions.txt";
+  private String recruitmentPath = directoryPath + File.separator + "recruitments.txt";
 
   public DataHandler(
       int maxAccounts,
       int maxEmployees,
       int maxDepartments,
       int maxPositions,
+      int maxRecruitments,
       int maxEvaluations,
       int maxContracts,
       int maxPayrolls,
@@ -45,6 +48,7 @@ public class DataHandler {
     this.employees = new Employee[maxEmployees];
     this.departments = new Department[maxDepartments];
     this.positions = new Position[maxPositions];
+    this.recruitments = new Recruitment[maxRecruitments];
 
     this.maxEvaluations = maxEvaluations;
     this.maxContracts = maxContracts;
@@ -326,11 +330,72 @@ public class DataHandler {
     return this.positions;
   }
 
+  private Recruitment[] readRecruitmentsData() {
+    int idx = 0;
+    try (Scanner sc = new Scanner(new File(recruitmentPath))) {
+      while (sc.hasNextLine() && idx < recruitments.length) {
+        recruitments[idx] = new Recruitment();
+        Recruitment thisRecruitment = recruitments[idx];
+
+        thisRecruitment.setNumberOfPositions(Integer.parseInt(sc.nextLine()));
+        thisRecruitment.setDeadline(LocalDate.parse(sc.nextLine()));
+        thisRecruitment.setStatus(Recruitment.RecruitmentStatus.valueOf(sc.nextLine()));
+
+        thisRecruitment.setDepartment(departments[Integer.parseInt(sc.nextLine())]);
+        thisRecruitment.setPosition(positions[Integer.parseInt(sc.nextLine())]);
+
+        sc.nextLine();
+        String tmp = sc.nextLine();
+
+        while (!tmp.equals("}")) {
+          tmp = sc.nextLine();
+
+          LocalDate applyDate = LocalDate.parse(tmp);
+          String coverLetter = sc.nextLine();
+          String resume = sc.nextLine();
+          Application.ApplicationStatus status = Application.ApplicationStatus.valueOf(sc.nextLine());
+
+          Candidate candidate = new Candidate();
+          candidate.setFirstName(sc.nextLine());
+          candidate.setLastName(sc.nextLine());
+          candidate.setEmail(sc.nextLine());
+          candidate.setPhone(sc.nextLine());
+          candidate.setDateOfBirth(LocalDate.parse(sc.nextLine()));
+          candidate.setGender(sc.nextLine());
+
+          candidate.setAddress(new Address());
+          candidate.getAddress().setNumber(sc.nextLine());
+          candidate.getAddress().setStreet(sc.nextLine());
+          candidate.getAddress().setWard(sc.nextLine());
+          candidate.getAddress().setDistrict(sc.nextLine());
+          candidate.getAddress().setCity(sc.nextLine());
+
+          thisRecruitment.addApplication(new Application(
+              applyDate,
+              coverLetter,
+              resume,
+              status,
+              candidate));
+
+          sc.nextLine();
+          tmp = sc.nextLine();
+        }
+
+        sc.nextLine();
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    return this.recruitments;
+  }
+
   public DataHandler readData() {
     readDepartmentsData();
     readPositionsData();
     readEmployeesData();
     readAccountsData();
+    readRecruitmentsData();
     return this;
   }
 
@@ -593,22 +658,128 @@ public class DataHandler {
     return data;
   }
 
+  private String writeRecruitmentData(DataHandler data) {
+    if (data == null ||
+        data.getRecruitments() == null ||
+        data.getDepartments() == null ||
+        data.getPositions() == null) {
+      return null;
+    }
+
+    String content = "";
+
+    if (data.getRecruitments() == null) {
+      return null;
+    }
+
+    for (int i = 0; i < data.getRecruitments().length; i++) {
+      Recruitment currRecruitment = data.getRecruitments()[i];
+      if (currRecruitment == null) {
+        break;
+      }
+
+      content += currRecruitment.getNumberOfPositions() + "\n";
+      content += currRecruitment.getDeadline() + "\n";
+      content += currRecruitment.getStatus() + "\n";
+
+      if (data.getDepartments() == null) {
+        return null;
+      }
+
+      for (int j = 0; j < data.getDepartments().length; j++) {
+        if (data.getDepartments()[j] != null &&
+            data.getDepartments()[j].getName() != null &&
+            currRecruitment.getDepartment() != null &&
+            currRecruitment.getDepartment().getName() != null &&
+            currRecruitment.getDepartment().getName().equals(
+                data.getDepartments()[j].getName())) {
+          content += j + "\n";
+          break;
+        }
+      }
+
+      if (data.getPositions() == null) {
+        return null;
+      }
+
+      for (int j = 0; j < data.getPositions().length; j++) {
+        if (data.getPositions()[j] != null &&
+            data.getPositions()[j].getName() != null &&
+            currRecruitment.getPosition() != null &&
+            currRecruitment.getPosition().getName() != null &&
+            currRecruitment.getPosition().getName().equals(
+                data.getPositions()[j].getName())) {
+          content += j + "\n";
+          break;
+        }
+      }
+
+      content += "{\n";
+      int count = currRecruitment.getApplicationCount();
+      if (count > 0) {
+        for (int j = 0; j < count; j++) {
+          if (currRecruitment.getApplications() == null) {
+            break;
+          }
+
+          Application currApplication = currRecruitment.getApplications()[j];
+          if (currApplication == null) {
+            break;
+          }
+
+          Candidate currCandidate = currApplication.getCandidate();
+          if (currCandidate == null || currCandidate.getAddress() == null) {
+            break;
+          }
+
+          content += "{\n";
+          content += currApplication.getApplyDate() + "\n";
+          content += currApplication.getCoverLetter() + "\n";
+          content += currApplication.getResume() + "\n";
+          content += currApplication.getStatus() + "\n";
+
+          content += currCandidate.getFirstName() + "\n";
+          content += currCandidate.getLastName() + "\n";
+          content += currCandidate.getEmail() + "\n";
+          content += currCandidate.getPhone() + "\n";
+          content += currCandidate.getDateOfBirth() + "\n";
+          content += currCandidate.getGender() + "\n";
+
+          content += currCandidate.getAddress().getNumber() + "\n";
+          content += currCandidate.getAddress().getStreet() + "\n";
+          content += currCandidate.getAddress().getWard() + "\n";
+          content += currCandidate.getAddress().getDistrict() + "\n";
+          content += currCandidate.getAddress().getCity() + "\n";
+          content += "}\n";
+        }
+      }
+      content += "}\n";
+
+      content += "\n";
+    }
+
+    return content;
+  }
+
   public void writeData() {
     try {
       FileWriter accountFileWriter = new FileWriter(accountPath);
       FileWriter employeeFileWriter = new FileWriter(employeePath);
       FileWriter departmentFileWriter = new FileWriter(departmentPath);
       FileWriter positionFileWriter = new FileWriter(positionPath);
+      FileWriter recruitmentFileWriter = new FileWriter(recruitmentPath);
 
       accountFileWriter.write(writeAccountData(accounts));
       employeeFileWriter.write(writeEmployeeData(employees));
       departmentFileWriter.write(writeDepartmentData(departments));
       positionFileWriter.write(writePositionData(positions));
+      recruitmentFileWriter.write(writeRecruitmentData(this));
 
       accountFileWriter.close();
       employeeFileWriter.close();
       departmentFileWriter.close();
       positionFileWriter.close();
+      recruitmentFileWriter.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -1108,22 +1279,109 @@ public class DataHandler {
     return data;
   }
 
+  private String writeSampleRecruitmentData() {
+    String content = "";
+
+    // Đợt tuyển dụng 1
+    content += "3\n";
+    content += "2026-12-30\n";
+    content += "OPEN\n";
+    content += "0\n"; // Department index
+    content += "0\n"; // Position index
+
+    content += "{\n";
+
+    // Ứng viên 1
+    content += "{\n";
+    content += "2026-12-01\n";
+    content += "Tôi mong muốn được làm việc tại công ty và đóng góp kiến thức, "
+        + "kinh nghiệm của mình cho sự phát triển của công ty.\n";
+    content += "CV_NguyenVanAn.pdf\n";
+    content += "SUBMITTED\n";
+
+    content += "Nguyễn\n";
+    content += "Văn An\n";
+    content += "an.nguyen@gmail.com\n";
+    content += "0901234567\n";
+    content += "2000-05-15\n";
+    content += "Nam\n";
+
+    content += "12\n";
+    content += "Nguyễn Trãi\n";
+    content += "Phường Bến Thành\n";
+    content += "Quận 1\n";
+    content += "Thành phố Hồ Chí Minh\n";
+    content += "}\n";
+
+    // Ứng viên 2
+    content += "{\n";
+    content += "2026-12-05\n";
+    content += "Với kiến thức chuyên môn và kinh nghiệm làm việc, "
+        + "tôi tin rằng mình phù hợp với vị trí ứng tuyển.\n";
+    content += "CV_TranThiBinh.pdf\n";
+    content += "UNDER_REVIEW\n";
+
+    content += "Trần\n";
+    content += "Thị Bình\n";
+    content += "binh.tran@gmail.com\n";
+    content += "0912345678\n";
+    content += "1999-08-20\n";
+    content += "Nữ\n";
+
+    content += "25\n";
+    content += "Lê Lợi\n";
+    content += "Phường Bến Nghé\n";
+    content += "Quận 1\n";
+    content += "Thành phố Hồ Chí Minh\n";
+    content += "}\n";
+
+    // Ứng viên 3
+    content += "{\n";
+    content += "2026-12-10\n";
+    content += "Tôi rất mong muốn có cơ hội được làm việc, "
+        + "học hỏi và phát triển cùng quý công ty.\n";
+    content += "CV_LeVanCuong.pdf\n";
+    content += "SHORTLISTED\n";
+
+    content += "Lê\n";
+    content += "Văn Cường\n";
+    content += "cuong.le@gmail.com\n";
+    content += "0987654321\n";
+    content += "2001-03-10\n";
+    content += "Nam\n";
+
+    content += "8\n";
+    content += "Cách Mạng Tháng 8\n";
+    content += "Phường 5\n";
+    content += "Quận 3\n";
+    content += "Thành phố Hồ Chí Minh\n";
+    content += "}\n";
+
+    content += "}\n";
+    content += "\n";
+
+    return content;
+  }
+
   public void writeSampleData() {
     try {
       FileWriter accountFileWriter = new FileWriter(accountPath);
       FileWriter employeeFileWriter = new FileWriter(employeePath);
       FileWriter departmentFileWriter = new FileWriter(departmentPath);
       FileWriter positionFileWriter = new FileWriter(positionPath);
+      FileWriter recruitmentFileWriter = new FileWriter(recruitmentPath);
 
       accountFileWriter.write(writeSampleAccountData());
       employeeFileWriter.write(writeSampleEmployeeData());
       departmentFileWriter.write(writeSampleDepartmentData());
       positionFileWriter.write(writeSamplePositionData());
+      recruitmentFileWriter.write(writeSampleRecruitmentData());
 
       accountFileWriter.close();
       employeeFileWriter.close();
       departmentFileWriter.close();
       positionFileWriter.close();
+      recruitmentFileWriter.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -1159,5 +1417,13 @@ public class DataHandler {
 
   public void setPositions(Position[] positions) {
     this.positions = positions;
+  }
+
+  public Recruitment[] getRecruitments() {
+    return recruitments;
+  }
+
+  public void setRecruitments(Recruitment[] recruitments) {
+    this.recruitments = recruitments;
   }
 }
