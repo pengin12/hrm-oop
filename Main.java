@@ -6,6 +6,17 @@ public class Main {
   private static DataHandler data;
   private static ConsoleUI console = new ConsoleUI();
 
+  private static int getOccupied(Object[] obj) {
+    int count = 0;
+    for (Object object : obj) {
+      if (object != null) {
+        count++;
+      }
+    }
+
+    return count;
+  }
+
   private static int validateInt(String str) {
     if (str.matches("[0-9]+")) {
       return Integer.parseInt(str);
@@ -117,7 +128,7 @@ public class Main {
             "Lịch chấm công", "Đơn nghỉ phép", "Đơn thôi việc", "Bảo hiểm" },
         { "Nhân viên", "Phòng ban", "Chức vụ" },
         { "Nhân viên", "Phòng ban", "Chức vụ" },
-        { "Nhân viên" },
+        { "Nhân viên", "Phòng ban", "Chức vụ" },
         { "Phản hồi yêu cầu", "Đánh giá hồ sơ ứng viên" },
     };
 
@@ -270,11 +281,41 @@ public class Main {
           account.removeEmployee(data.getEmployees(), removeEmployee, sc);
           account.removeAccount(data.getAccounts(), removeEmployee, sc);
           break;
-
         case 29:
-          account.replyRequest(data, sc);
+          title = "Xóa phòng ban";
+          subtitle = "";
+          String content = PrintTables.getDepartments(data.getDepartments(), sc);
+          input = "Tên phòng ban (STT)";
+
+          int departmentChoice = validateInt(console.printUI(title, subtitle, content, input, sc).trim()) - 1;
+          int departmentOccupied = getOccupied(data.getDepartments());
+          if (departmentChoice < 0 || departmentOccupied <= departmentChoice) {
+            console.printResult(title, "Lựa chọn không hợp lệ", sc);
+            break;
+          }
+
+          account.removeDepartment(data.getDepartments(), departmentChoice, sc);
           break;
         case 30:
+          title = "Xóa chức vụ";
+          subtitle = "";
+          content = PrintTables.getPositions(data.getPositions(), sc);
+          input = "Tên chức vụ (STT)";
+
+          int positionChoice = validateInt(console.printUI(title, subtitle, content, input, sc).trim()) - 1;
+          int positionOccupied = getOccupied(data.getPositions());
+          if (positionChoice < 0 || positionOccupied <= positionChoice) {
+            console.printResult(title, "Lựa chọn không hợp lệ", sc);
+            break;
+          }
+
+          account.removePosition(data.getPositions(), positionChoice, sc);
+          break;
+
+        case 31:
+          account.replyRequest(data, sc);
+          break;
+        case 32:
           RecruitmentMenu.recruitmentMenu(data, sc);
           break;
 

@@ -125,6 +125,47 @@ public class AdminAccount extends Account {
         console.printResult(title, "Không tìm thấy nhân viên: " + id, sc);
     }
 
+    private void sortOutNull(Object[] obj) {
+        int index = 0;
+
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+                Object temp = obj[index];
+                obj[index] = obj[i];
+                obj[i] = temp;
+                index++;
+            }
+        }
+    }
+
+    public void removeDepartment(Department[] departments, int id, Scanner sc) {
+        ConsoleUI console = new ConsoleUI();
+        String title = "Xóa phòng ban";
+
+        if (departments[id] != null) {
+            console.printResult(title, "Đã xóa phòng ban: " + departments[id].getName(), sc);
+            departments[id] = null;
+            return;
+        }
+
+        sortOutNull(departments);
+        console.printResult(title, "Không tìm thấy phòng ban: " + id, sc);
+    }
+
+    public void removePosition(Position[] positions, int id, Scanner sc) {
+        ConsoleUI console = new ConsoleUI();
+        String title = "Xóa chức vụ";
+
+        if (positions[id] != null) {
+            console.printResult(title, "Đã xóa chức vụ: " + positions[id].getName(), sc);
+            positions[id] = null;
+            return;
+        }
+
+        sortOutNull(positions);
+        console.printResult(title, "Không tìm thấy chức vụ: " + id, sc);
+    }
+
     public void removeAccount(Account[] accounts, String id, Scanner sc) {
         ConsoleUI console = new ConsoleUI();
 

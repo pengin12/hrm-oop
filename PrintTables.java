@@ -112,16 +112,44 @@ public class PrintTables {
     show("Danh sách nhân viên", content.toString(), sc);
   }
 
-  public static void printDepartments(Department[] employees, Scanner sc) {
+  public static String getDepartments(Department[] departments, Scanner sc) {
     StringBuilder content = new StringBuilder();
-    if (employees == null) {
+    if (departments == null) {
+      content.append("Không tìm thấy danh sách phòng ban: ").append(sc);
+    } else {
+      int[] w = { 5, 50, 20, 30 };
+      appendHeader(content, w, "STT", "Tên phòng ban", "Điện thoại", "Chức vụ");
+      appendSeparator(content, w);
+      boolean found = false;
+      int idx = 1;
+      for (Department e : departments) {
+        if (e != null) {
+          appendRow(content, w, String.valueOf(idx),
+              String.format("%s", e.getName()),
+              String.format("%s", e.getPhone()),
+              String.format("%s", e.getPosition()));
+          found = true;
+          idx++;
+        }
+      }
+
+      if (!found)
+        content.append("Không tìm thấy dữ liệu phòng ban.\n");
+    }
+
+    return content.toString();
+  }
+
+  public static void printDepartments(Department[] departments, Scanner sc) {
+    StringBuilder content = new StringBuilder();
+    if (departments == null) {
       content.append("Không tìm thấy danh sách phòng ban: ").append(sc);
     } else {
       int[] w = { 50, 20, 30 };
       appendHeader(content, w, "Tên phòng ban", "Điện thoại", "Chức vụ");
       appendSeparator(content, w);
       boolean found = false;
-      for (Department e : employees) {
+      for (Department e : departments) {
         if (e != null) {
           appendRow(content, w, String.valueOf(e.getName()),
               String.format("%s", e.getPhone()),
@@ -136,16 +164,16 @@ public class PrintTables {
     show("Danh sách phòng ban", content.toString(), sc);
   }
 
-  public static void printPositions(Position[] employees, Scanner sc) {
+  public static void printPositions(Position[] positions, Scanner sc) {
     StringBuilder content = new StringBuilder();
-    if (employees == null) {
+    if (positions == null) {
       content.append("Không tìm thấy danh sách chức vụ: ").append(sc);
     } else {
       int[] w = { 40, 8, 40 };
       appendHeader(content, w, "Tên chức vụ", "Hệ số", "Trách nhiệm");
       appendSeparator(content, w);
       boolean found = false;
-      for (Position e : employees) {
+      for (Position e : positions) {
         if (e != null) {
           appendRow(content, w, String.valueOf(e.getName()),
               String.format("%s", e.getPositionCoefficient()),
@@ -158,6 +186,34 @@ public class PrintTables {
         content.append("Không tìm thấy dữ liệu chức vụ.\n");
     }
     show("Danh sách chức vụ", content.toString(), sc);
+  }
+
+  public static String getPositions(Position[] positions, Scanner sc) {
+    StringBuilder content = new StringBuilder();
+    if (positions == null) {
+      content.append("Không tìm thấy danh sách chức vụ: ").append(sc);
+    } else {
+      int[] w = { 5, 40, 8, 40 };
+      appendHeader(content, w, "STT", "Tên chức vụ", "Hệ số", "Trách nhiệm");
+      appendSeparator(content, w);
+      boolean found = false;
+      int idx = 1;
+      for (Position e : positions) {
+        if (e != null) {
+          appendRow(content, w, String.valueOf(idx),
+              String.format("%s", e.getName()),
+              String.format("%s", e.getPositionCoefficient()),
+              String.format("%s", e.getResponsibilities()));
+          found = true;
+          idx++;
+        }
+      }
+
+      if (!found)
+        content.append("Không tìm thấy dữ liệu chức vụ.\n");
+    }
+
+    return content.toString();
   }
 
   public static void printEvaluations(Employee employee, String id, Scanner sc) {
